@@ -41,9 +41,9 @@ export function Wave({ className, flip = false }: { className?: string; flip?: b
       style={flip ? { transform: "scaleY(-1)" } : undefined}
     >
       <path
-        fill="currentColor"
+        fill="var(--color-aqua)"
         d="M0 40c120 22 240 33 360 28S600 34 720 30s240 10 360 20 240 12 360-2V80H0z"
-        opacity=".45"
+        opacity=".3"
       />
       <path
         fill="currentColor"

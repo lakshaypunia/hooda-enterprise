@@ -35,6 +35,7 @@
   --animate-sway: sway 6s ease-in-out infinite;
   --animate-swim: swim 22s linear infinite;
   --animate-caustics: caustics 14s ease-in-out infinite alternate;
+  --animate-float: float 7s ease-in-out infinite;
 
   @keyframes bubble {
     0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
@@ -50,6 +51,10 @@
     0% { transform: translateX(-20vw) translateY(0); }
     50% { transform: translateX(50vw) translateY(-18px); }
     100% { transform: translateX(120vw) translateY(0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
+    50% { transform: translateY(-14px) rotate(var(--tilt, 0deg)); }
   }
   @keyframes caustics {
     0% { background-position: 0% 0%, 100% 0%; }
