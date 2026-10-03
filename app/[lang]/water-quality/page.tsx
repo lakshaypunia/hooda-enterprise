@@ -4,12 +4,16 @@ import { ArrowRight, Fish, Info } from "lucide-react";
 import { waterParameters, waterTips } from "@/data/water-quality";
 import { problemText } from "@/data/taxonomy";
 import { getLocale } from "@/lib/i18n/server";
+import { pageMetadata } from "@/lib/seo";
 import { PageBanner } from "@/components/page-banner";
 import { ProblemIcon } from "@/components/problem-icon";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/water-quality">): Promise<Metadata> {
-  const { t } = await getLocale(params);
-  return { title: t.meta.waterTitle, description: t.meta.waterDescription };
+  const { lang, t } = await getLocale(params);
+  return pageMetadata(lang, "/water-quality", {
+    title: t.meta.waterTitle,
+    description: t.meta.waterDescription,
+  });
 }
 
 export default async function WaterQualityPage({ params }: PageProps<"/[lang]/water-quality">) {

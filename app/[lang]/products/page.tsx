@@ -4,11 +4,15 @@ import { products } from "@/data/products";
 import { Catalogue } from "@/components/catalogue";
 import { PageBanner } from "@/components/page-banner";
 import { getLocale } from "@/lib/i18n/server";
+import { pageMetadata } from "@/lib/seo";
 import { DISCOUNT_PERCENT } from "@/lib/site-config";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/products">): Promise<Metadata> {
-  const { t } = await getLocale(params);
-  return { title: t.meta.productsTitle, description: t.meta.productsDescription };
+  const { lang, t } = await getLocale(params);
+  return pageMetadata(lang, "/products", {
+    title: t.meta.productsTitle,
+    description: t.meta.productsDescription,
+  });
 }
 
 export default async function ProductsPage({ params }: PageProps<"/[lang]/products">) {

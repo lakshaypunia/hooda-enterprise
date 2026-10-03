@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -20,6 +21,7 @@ import {
 } from "@/data/taxonomy";
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n/server";
+import { pageMetadata } from "@/lib/seo";
 import { DISCOUNT_PERCENT, siteConfig } from "@/lib/site-config";
 import { generalMessage, whatsappLink } from "@/lib/whatsapp";
 import { Wave, WhatsAppIcon } from "@/components/icons";
@@ -64,6 +66,11 @@ const countBy = <K extends string>(key: (p: Product) => K | K[]) => {
 
 const categoryCounts = countBy((p) => p.category);
 const problemCounts = countBy((p) => p.problems);
+
+export async function generateMetadata({ params }: PageProps<"/[lang]">): Promise<Metadata> {
+  const { lang, t } = await getLocale(params);
+  return pageMetadata(lang, "/", { title: t.meta.siteTitle, description: t.meta.siteDescription });
+}
 
 type SectionProps = { lang: Locale; t: Dictionary; href: (path: string) => string };
 

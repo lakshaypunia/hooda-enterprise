@@ -4,6 +4,7 @@ import { BadgePercent, HeartHandshake, PackageCheck, Stethoscope } from "lucide-
 import { products } from "@/data/products";
 import { categories } from "@/data/taxonomy";
 import { getLocale } from "@/lib/i18n/server";
+import { pageMetadata } from "@/lib/seo";
 import { DISCOUNT_PERCENT, siteConfig } from "@/lib/site-config";
 import { generalMessage, whatsappLink } from "@/lib/whatsapp";
 import { WhatsAppIcon } from "@/components/icons";
@@ -13,8 +14,8 @@ import { PageBanner } from "@/components/page-banner";
 const VALUE_ICONS = [PackageCheck, BadgePercent, Stethoscope, HeartHandshake];
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/about">): Promise<Metadata> {
-  const { t } = await getLocale(params);
-  return { title: t.meta.aboutTitle, description: t.meta.aboutDescription };
+  const { lang, t } = await getLocale(params);
+  return pageMetadata(lang, "/about", { title: t.meta.aboutTitle, description: t.meta.aboutDescription });
 }
 
 export default async function AboutPage({ params }: PageProps<"/[lang]/about">) {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Clock, MapPin, Phone } from "lucide-react";
 import { getLocale } from "@/lib/i18n/server";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site-config";
 import { generalMessage, whatsappLink } from "@/lib/whatsapp";
 import { EnquiryForm } from "@/components/enquiry-form";
@@ -8,8 +9,11 @@ import { WhatsAppIcon } from "@/components/icons";
 import { PageBanner } from "@/components/page-banner";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/contact">): Promise<Metadata> {
-  const { t } = await getLocale(params);
-  return { title: t.meta.contactTitle, description: t.meta.contactDescription };
+  const { lang, t } = await getLocale(params);
+  return pageMetadata(lang, "/contact", {
+    title: t.meta.contactTitle,
+    description: t.meta.contactDescription,
+  });
 }
 
 export default async function ContactPage({ params }: PageProps<"/[lang]/contact">) {

@@ -7,6 +7,8 @@ import { SiteHeader } from "@/components/site-header";
 import { WhatsAppFab } from "@/components/whatsapp-fab";
 import { htmlLang, locales } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n/server";
+import { pageMetadata } from "@/lib/seo";
+import { siteConfig } from "@/lib/site-config";
 import "../globals.css";
 
 const baloo = Baloo_2({
@@ -26,10 +28,16 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {
-  const { t } = await getLocale(params);
+  const { lang, t } = await getLocale(params);
+  const base = pageMetadata(lang, "/", { title: t.meta.siteTitle, description: t.meta.siteDescription });
   return {
-    title: { default: t.meta.siteTitle, template: `%s | Hooda Enterprise` },
-    description: t.meta.siteDescription,
+    ...base,
+    metadataBase: new URL(siteConfig.url),
+    title: { default: t.meta.siteTitle, template: `%s | ${siteConfig.name}` },
+    applicationName: siteConfig.name,
+    // Page-level metadata sets its own canonical; the layout only provides defaults.
+    alternates: undefined,
+    formatDetection: { telephone: true },
   };
 }
 

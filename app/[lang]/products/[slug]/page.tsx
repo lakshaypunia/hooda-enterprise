@@ -9,6 +9,7 @@ import { productNames, productTagline } from "@/data/products-hi";
 import { applicationLabel, categoryText, problemText, speciesLabel } from "@/data/taxonomy";
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n/server";
+import { pageMetadata } from "@/lib/seo";
 import { BuyPanel } from "@/components/buy-panel";
 import { Wave } from "@/components/icons";
 import { ProblemIcon } from "@/components/problem-icon";
@@ -28,10 +29,10 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/products/[
   const product = getProduct((await params).slug);
   if (!product) return {};
   const names = productNames(product, lang);
-  return {
+  return pageMetadata(lang, `/products/${product.slug}`, {
     title: `${names.primary} — ${productTagline(product, lang)}`,
     description: product.description,
-  };
+  });
 }
 
 type Ctx = { lang: Locale; t: Dictionary; href: (path: string) => string; product: Product };
