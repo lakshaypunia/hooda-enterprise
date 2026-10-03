@@ -16,8 +16,8 @@ export function SiteFooter() {
               <span className="font-display text-xl font-bold">{siteConfig.name}</span>
             </Link>
             <p className="mt-4 max-w-sm text-foam/75">{siteConfig.description}</p>
-            <p className="mt-4 text-sm text-foam/60">
-              Supplier of {siteConfig.brands.join(" & ")} products.
+            <p className="mt-4 max-w-sm rounded-2xl bg-white/6 p-3 text-sm text-foam/70 ring-1 ring-white/10">
+              {siteConfig.dealerNote}
             </p>
           </div>
 
@@ -66,8 +66,10 @@ export function SiteFooter() {
 
         <div className="border-t border-white/10">
           <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-sm text-foam/55 sm:flex-row sm:justify-between sm:px-6">
-            <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
-            <p>Product names and trademarks belong to their respective owners.</p>
+            <p>
+              © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+            </p>
+            <p>Independent dealer · Products are made by their respective manufacturers.</p>
           </div>
         </div>
       </div>

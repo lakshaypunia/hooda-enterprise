@@ -1,3 +1,4 @@
+import type { BrandKey } from "./brands";
 import type {
   ApplicationSlug,
   CategorySlug,
@@ -32,7 +33,7 @@ export type Product = {
   slug: string;
   name: string;
   nameHi: string;
-  brand: string;
+  brand: BrandKey;
   tagline: string;
   category: CategorySlug;
   description: string;
@@ -48,7 +49,7 @@ export type Product = {
   keywords: string[];
 };
 
-const BRAND = "Provet BluNova";
+const BRAND: BrandKey = "Provet BluNova";
 
 export const products: Product[] = [
   // ───────────────────────── Soil & water probiotics ─────────────────────────

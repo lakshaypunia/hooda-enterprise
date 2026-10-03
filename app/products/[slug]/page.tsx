@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Atom, Check, ChevronRight, FlaskConical, Info, ListChecks } from "lucide-react";
+import { brands } from "@/data/brands";
 import { getProduct, products, type Product } from "@/data/products";
 import { applications, categories, problems, species } from "@/data/taxonomy";
 import { DOSAGE_DISCLAIMER } from "@/lib/site-config";
@@ -68,7 +69,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
 
             <div>
               <p className="font-display text-sm font-semibold tracking-widest text-aqua-light uppercase">
-                {product.brand}
+                {brands[product.brand].range} · by {brands[product.brand].manufacturer}
               </p>
               <h1 className="mt-1 text-4xl leading-tight font-extrabold sm:text-5xl">
                 {product.name}

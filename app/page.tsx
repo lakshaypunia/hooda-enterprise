@@ -80,7 +80,7 @@ function Hero() {
         <div>
           <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1 text-sm text-aqua-light backdrop-blur">
             <span className="size-2 rounded-full bg-whatsapp" />
-            Wholesale aquaculture supplies · Fish & Shrimp
+            Independent dealer · Wholesale aquaculture supplies
           </p>
           <h1 className="mt-5 max-w-3xl text-4xl leading-[1.05] font-extrabold sm:text-6xl">
             Healthy ponds,
@@ -90,9 +90,9 @@ function Hero() {
             </span>
           </h1>
           <p className="mt-5 max-w-xl text-lg text-foam/85 sm:text-xl">
-            Probiotics, zeolites, minerals, disinfectants and feed additives from {siteConfig.brands[0]} — at{" "}
-            <strong className="text-white">{DISCOUNT_PERCENT}% below MRP</strong>, ordered straight on
-            WhatsApp.
+            Probiotics, zeolites, minerals, disinfectants and feed additives from trusted brands like{" "}
+            {siteConfig.brands[0]} — at <strong className="text-white">{DISCOUNT_PERCENT}% below MRP</strong>,
+            ordered straight on WhatsApp.
           </p>
 
           <form
@@ -297,7 +297,7 @@ const REASONS = [
   {
     icon: PackageCheck,
     title: "Genuine products",
-    text: `Sourced directly from ${siteConfig.brands[0]}, with fresh stock and sealed packs.`,
+    text: "We source from trusted manufacturers and sell only sealed, original packs.",
   },
   {
     icon: Stethoscope,

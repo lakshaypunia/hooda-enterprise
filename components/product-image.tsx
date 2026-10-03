@@ -33,7 +33,11 @@ export function ProductImage({ product, sizes, priority, className = "" }: Props
       className={`relative grid aspect-square place-items-center overflow-hidden bg-underwater text-center text-white ${className}`}
     >
       <div aria-hidden className="absolute inset-0 caustics opacity-70" />
-      <svg aria-hidden viewBox="0 0 120 60" className="absolute bottom-6 left-1/2 w-1/2 -translate-x-1/2 text-white/10">
+      <svg
+        aria-hidden
+        viewBox="0 0 120 60"
+        className="absolute bottom-6 left-1/2 w-1/2 -translate-x-1/2 text-white/10"
+      >
         <path
           fill="currentColor"
           d="M5 30c18-18 45-24 70-18 12 3 22 9 30 16l12-10v24l-12-10c-8 7-18 13-30 16-25 6-52 0-70-18z"

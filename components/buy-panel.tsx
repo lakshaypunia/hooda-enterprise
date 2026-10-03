@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { MessageCircleQuestion, Minus, Plus, ShoppingBasket } from "lucide-react";
+import { brands } from "@/data/brands";
 import type { Product } from "@/data/products";
 import { basket } from "@/lib/basket";
 import { formatINR, sellingPrice } from "@/lib/pricing";
-import { DISCOUNT_PERCENT } from "@/lib/site-config";
+import { DISCOUNT_PERCENT, siteConfig } from "@/lib/site-config";
 import { buyMessage, queryMessage, whatsappLink } from "@/lib/whatsapp";
 import { WhatsAppIcon } from "./icons";
 
@@ -100,6 +101,10 @@ export function BuyPanel({ product }: { product: Product }) {
         >
           <MessageCircleQuestion className="size-4" /> Ask a question about this product
         </a>
+        <p className="border-t border-deep/8 pt-3 text-center text-xs text-muted">
+          Sold by {siteConfig.name}, an independent dealer. Manufactured by{" "}
+          {brands[product.brand].manufacturer}.
+        </p>
       </div>
     </section>
   );

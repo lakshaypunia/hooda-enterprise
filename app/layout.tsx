@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Baloo_2, Mukta } from "next/font/google";
+import { DealerBar } from "@/components/dealer-bar";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { WhatsAppFab } from "@/components/whatsapp-fab";
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s | Hooda Enterprise",
   },
   description:
-    "Wholesale supplier of Provet Pharma aquaculture products — probiotics, zeolites, disinfectants, minerals and feed additives for healthy fish and shrimp ponds. Order on WhatsApp.",
+    "Independent dealer of aquaculture products from trusted brands like Provet Pharma (BluNova) — probiotics, zeolites, disinfectants, minerals and feed additives for fish and shrimp ponds, 20% below MRP. Order on WhatsApp.",
 };
 
 export const viewport: Viewport = {
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
+        <DealerBar />
         <SiteHeader />
         <div id="main" className="flex flex-1 flex-col">
           {children}

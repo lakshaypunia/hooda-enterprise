@@ -80,7 +80,10 @@ function Kelp({ className, delay = "0s" }: { className?: string; delay?: string 
         strokeLinecap="round"
         fill="none"
       />
-      <path d="M18 120c-12-4-16-14-14-22 8 4 12 12 14 22zM16 70c12-4 16-14 14-22-8 4-12 12-14 22z" fill="currentColor" />
+      <path
+        d="M18 120c-12-4-16-14-14-22 8 4 12 12 14 22zM16 70c12-4 16-14 14-22-8 4-12 12-14 22z"
+        fill="currentColor"
+      />
     </svg>
   );
 }

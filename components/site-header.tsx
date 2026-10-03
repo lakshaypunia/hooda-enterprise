@@ -20,15 +20,12 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   return (
     <header
       className={`sticky top-0 z-40 transition-[background-color,box-shadow] duration-300 ${
-        scrolled || open
-          ? "bg-deep/95 shadow-soft backdrop-blur-md"
-          : "bg-deep"
+        scrolled || open ? "bg-deep/95 shadow-soft backdrop-blur-md" : "bg-deep"
       }`}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">

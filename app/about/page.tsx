@@ -18,7 +18,7 @@ const VALUES = [
   {
     icon: PackageCheck,
     title: "Genuine stock",
-    text: `Products sourced from ${siteConfig.brands[0]}, sold in sealed, original packs.`,
+    text: "Genuine products sourced from trusted manufacturers, sold in sealed, original packs.",
   },
   {
     icon: BadgePercent,
@@ -70,9 +70,10 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold text-ink sm:text-4xl">Who we are</h2>
           <div className="mt-4 space-y-4 text-lg text-ink/80">
             <p>
-              {siteConfig.name} is a wholesale supplier of aquaculture health products. We stock the{" "}
-              {siteConfig.brands.join(" and ")} range of probiotics, zeolites, oxygen supplements,
-              disinfectants, minerals and feed additives used by fish and shrimp farmers.
+              {siteConfig.name} is an independent dealer and wholesale supplier of aquaculture health
+              products. We are not a manufacturer — we source products from trusted brands, currently the{" "}
+              {siteConfig.brands.join(", ")} range of probiotics, zeolites, oxygen supplements, disinfectants,
+              minerals and feed additives used by fish and shrimp farmers.
             </p>
             <p>
               We keep ordering simple: find what you need on this website, see the price upfront, and send us
@@ -100,6 +101,34 @@ export default function AboutPage() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section id="dealer" className="mx-auto max-w-6xl scroll-mt-24 px-4 pb-10 sm:px-6">
+        <div className="rounded-[1.75rem] border-2 border-dashed border-lagoon/30 bg-foam/60 p-6 sm:p-8">
+          <h2 className="text-2xl font-bold text-ink sm:text-3xl">We are a dealer, not the manufacturer</h2>
+          <p className="mt-3 max-w-3xl text-lg text-ink/80">{siteConfig.dealerNote}</p>
+          <ul className="mt-5 grid gap-3 sm:grid-cols-3">
+            {[
+              [
+                "Manufacturers make the products",
+                "Composition, quality and packaging are the brand's responsibility.",
+              ],
+              [
+                "We source and supply",
+                "We buy from trusted brands and sell to farmers, hatcheries and shops.",
+              ],
+              [
+                "We help you choose",
+                "Dosage information comes from the manufacturer's published literature.",
+              ],
+            ].map(([title, text]) => (
+              <li key={title} className="rounded-2xl bg-white p-4 shadow-soft">
+                <p className="font-display text-lg font-semibold text-deep">{title}</p>
+                <p className="mt-1 text-sm text-muted">{text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">

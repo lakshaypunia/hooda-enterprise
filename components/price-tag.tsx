@@ -21,7 +21,9 @@ export function PriceTag({ mrp, prefix, size = "sm" }: Props) {
   return (
     <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
       {prefix && <span className="text-sm text-muted">{prefix}</span>}
-      <span className={`font-display font-bold text-ink ${size === "lg" ? "text-3xl" : "text-lg sm:text-xl"}`}>
+      <span
+        className={`font-display font-bold text-ink ${size === "lg" ? "text-3xl" : "text-lg sm:text-xl"}`}
+      >
         {formatINR(sellingPrice(mrp))}
       </span>
       <span className="text-sm text-muted line-through" aria-label={`MRP ${formatINR(mrp)}`}>
