@@ -189,7 +189,7 @@ function SectionHeading({ eyebrow, title, intro }: { eyebrow: string; title: str
 
 function ProblemFinder() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+    <section id="problems" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6 sm:py-20">
       <SectionHeading
         eyebrow="Find by problem"
         title="What's troubling your pond?"
