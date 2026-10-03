@@ -1,26 +1,128 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Aquatic design tokens.
+ * Palette moves from the deep pond floor (abyss) up through open water (lagoon, aqua)
+ * to the surface (foam) and the pond bank (sand, cream). Coral is the call-to-action accent.
+ */
+@theme {
+  --color-abyss: #062a33;
+  --color-deep: #0b3c49;
+  --color-deep-2: #0f4c5c;
+  --color-lagoon: #0e7c86;
+  --color-aqua: #2bb3b1;
+  --color-aqua-light: #7fd8d2;
+  --color-foam: #e3f6f3;
+  --color-sand: #f3e9d7;
+  --color-cream: #fbf8f2;
+  --color-coral: #ff7a59;
+  --color-coral-dark: #e85d3c;
+  --color-kelp: #3f8f5a;
+  --color-whatsapp: #25d366;
+  --color-whatsapp-dark: #128c4a;
+  --color-ink: #10262c;
+  --color-muted: #557178;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-display: var(--font-baloo), ui-rounded, system-ui, sans-serif;
+  --font-sans: var(--font-mukta), system-ui, sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --radius-drop: 2rem 2rem 2rem 0.5rem;
+
+  --shadow-soft: 0 10px 30px -12px rgb(6 42 51 / 0.25);
+  --shadow-glow: 0 0 0 1px rgb(43 179 177 / 0.25), 0 12px 40px -10px rgb(43 179 177 / 0.45);
+
+  --animate-bubble: bubble var(--bubble-duration, 9s) ease-in infinite;
+  --animate-sway: sway 6s ease-in-out infinite;
+  --animate-swim: swim 22s linear infinite;
+  --animate-caustics: caustics 14s ease-in-out infinite alternate;
+
+  @keyframes bubble {
+    0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+    10% { opacity: 0.8; }
+    50% { transform: translate(12px, -50vh) scale(1); }
+    100% { transform: translate(-8px, -105vh) scale(1.1); opacity: 0; }
+  }
+  @keyframes sway {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+  @keyframes swim {
+    0% { transform: translateX(-20vw) translateY(0); }
+    50% { transform: translateX(50vw) translateY(-18px); }
+    100% { transform: translateX(120vw) translateY(0); }
+  }
+  @keyframes caustics {
+    0% { background-position: 0% 0%, 100% 0%; }
+    100% { background-position: 100% 100%, 0% 100%; }
   }
 }
 
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+::selection {
+  background: var(--color-aqua-light);
+  color: var(--color-abyss);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-aqua);
+  outline-offset: 2px;
+}
+
+/* Deep-water gradient used on hero and dark sections. */
+@utility bg-underwater {
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgb(43 179 177 / 0.35) 0%, transparent 60%),
+    linear-gradient(180deg, var(--color-lagoon) 0%, var(--color-deep) 45%, var(--color-abyss) 100%);
+}
+
+/* Moving light ripples, layered over bg-underwater. */
+@utility caustics {
+  background-image:
+    radial-gradient(ellipse 30% 12% at 30% 20%, rgb(255 255 255 / 0.12), transparent 70%),
+    radial-gradient(ellipse 25% 10% at 70% 40%, rgb(255 255 255 / 0.1), transparent 70%);
+  background-size: 200% 200%, 220% 220%;
+  animation: var(--animate-caustics);
+}
+
+/* Water-drop card shape. */
+@utility rounded-drop {
+  border-radius: var(--radius-drop);
+}
+
+/* Subtle scale pattern for light sections. */
+@utility bg-scales {
+  background-color: var(--color-cream);
+  background-image: radial-gradient(circle at 50% 120%, transparent 58%, rgb(14 124 134 / 0.06) 60%, transparent 62%);
+  background-size: 28px 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
