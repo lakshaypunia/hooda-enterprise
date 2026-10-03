@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Clock, MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Phone, Truck, type LucideIcon } from "lucide-react";
 import { getLocale } from "@/lib/i18n/server";
 import { pageMetadata } from "@/lib/seo";
-import { siteConfig } from "@/lib/site-config";
+import { serviceAreaText, siteConfig } from "@/lib/site-config";
 import { generalMessage, whatsappLink } from "@/lib/whatsapp";
 import { EnquiryForm } from "@/components/enquiry-form";
 import { WhatsAppIcon } from "@/components/icons";
@@ -20,12 +20,12 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
   const { lang, t } = await getLocale(params);
   const c = t.contact;
   const hi = lang === "hi";
-  const details = [
+  const details: { icon: LucideIcon; label: string; value: string; href?: string }[] = [
     {
       icon: Phone,
       label: c.phone,
       value: siteConfig.phoneDisplay,
-      href: `tel:+${siteConfig.whatsappNumber}`,
+      href: `tel:+${siteConfig.phone}`,
     },
     {
       icon: MapPin,
@@ -35,6 +35,8 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
     },
     { icon: Clock, label: c.hours, value: hi ? siteConfig.hoursHi : siteConfig.hours },
   ];
+  const areas = serviceAreaText(lang);
+  if (areas) details.splice(1, 0, { icon: Truck, label: t.area.label, value: areas });
 
   return (
     <main className="flex-1">
@@ -90,6 +92,7 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
               );
             })}
           </ul>
+          {areas && <p className="px-2 text-sm text-muted">{t.area.outside}</p>}
         </aside>
 
         <section className="relative rounded-[1.75rem] bg-white p-5 shadow-soft ring-1 ring-deep/6 sm:p-8 lg:-mt-10">

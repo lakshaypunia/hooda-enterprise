@@ -22,7 +22,7 @@ import {
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n/server";
 import { pageMetadata } from "@/lib/seo";
-import { DISCOUNT_PERCENT, siteConfig } from "@/lib/site-config";
+import { DISCOUNT_PERCENT, serviceAreaText, siteConfig } from "@/lib/site-config";
 import { generalMessage, whatsappLink } from "@/lib/whatsapp";
 import { Wave, WhatsAppIcon } from "@/components/icons";
 import { ProblemIcon } from "@/components/problem-icon";
@@ -101,7 +101,7 @@ function Hero({ lang, t, href }: SectionProps) {
         <div>
           <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1 text-sm text-aqua-light backdrop-blur">
             <span className="size-2 rounded-full bg-whatsapp" />
-            {h.heroChip}
+            {serviceAreaText(lang) ? t.area.chip(serviceAreaText(lang)) : h.heroChip}
           </p>
           <h1 className="mt-5 max-w-3xl text-4xl leading-[1.1] font-extrabold sm:text-6xl">
             {h.heroTitle1}

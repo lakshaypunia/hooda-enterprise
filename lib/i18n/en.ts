@@ -39,6 +39,14 @@ const en = {
 
   brandTagline: "Aquaculture Solutions",
 
+  area: {
+    label: "Service area",
+    deliver: (areas: string) => `Delivering in ${areas}`,
+    chip: (areas: string) => `Independent dealer · Serving ${areas}`,
+    about: (areas: string) => `We currently supply farmers, hatcheries and shops in ${areas}.`,
+    outside: "Outside these districts? Message us — we'll tell you if we can help.",
+  },
+
   common: {
     orderOnWhatsApp: "Order on WhatsApp",
     chatOnWhatsApp: "Chat on WhatsApp",

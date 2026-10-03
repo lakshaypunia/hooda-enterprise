@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Phone, Truck } from "lucide-react";
 import { categories, categoryText, type CategorySlug } from "@/data/taxonomy";
-import { siteConfig } from "@/lib/site-config";
+import { serviceAreaText, siteConfig } from "@/lib/site-config";
 import { generalMessage, whatsappLink } from "@/lib/whatsapp";
 import { useI18n } from "./i18n-provider";
 import { LogoMark, Wave, WhatsAppIcon } from "./icons";
@@ -60,10 +60,16 @@ export function SiteFooter() {
             <ul className="mt-3 space-y-3 text-foam/80">
               <li className="flex gap-3">
                 <Phone className="mt-0.5 size-5 shrink-0 text-aqua" aria-hidden />
-                <a href={`tel:+${siteConfig.whatsappNumber}`} className="hover:text-aqua-light">
+                <a href={`tel:+${siteConfig.phone}`} className="hover:text-aqua-light">
                   {siteConfig.phoneDisplay}
                 </a>
               </li>
+              {serviceAreaText(lang) && (
+                <li className="flex gap-3">
+                  <Truck className="mt-0.5 size-5 shrink-0 text-aqua" aria-hidden />
+                  <span>{t.area.deliver(serviceAreaText(lang))}</span>
+                </li>
+              )}
               <li className="flex gap-3">
                 <MapPin className="mt-0.5 size-5 shrink-0 text-aqua" aria-hidden />
                 <span>{lang === "hi" ? siteConfig.addressHi : siteConfig.address}</span>

@@ -5,7 +5,7 @@ import { products } from "@/data/products";
 import { categories } from "@/data/taxonomy";
 import { getLocale } from "@/lib/i18n/server";
 import { pageMetadata } from "@/lib/seo";
-import { DISCOUNT_PERCENT, siteConfig } from "@/lib/site-config";
+import { DISCOUNT_PERCENT, serviceAreaText, siteConfig } from "@/lib/site-config";
 import { generalMessage, whatsappLink } from "@/lib/whatsapp";
 import { WhatsAppIcon } from "@/components/icons";
 import { PageBanner } from "@/components/page-banner";
@@ -51,6 +51,9 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
           <div className="mt-4 space-y-4 text-lg text-ink/80">
             <p>{a.who1(siteConfig.name, siteConfig.brands.join(", "))}</p>
             <p>{a.who2}</p>
+            {serviceAreaText(lang) && (
+              <p className="font-semibold text-deep">{t.area.about(serviceAreaText(lang))}</p>
+            )}
           </div>
           <a
             href={whatsappLink(generalMessage(lang))}

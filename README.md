@@ -22,21 +22,31 @@ Open <http://localhost:3000>.
 
 ## Configuration
 
-| Variable | Purpose |
-| --- | --- |
-| `NEXT_PUBLIC_WHATSAPP_NUMBER` | Number that receives buy requests (digits only, with country code, e.g. `919812345678`) |
-| `NEXT_PUBLIC_WHATSAPP_QUERY_NUMBER` | Optional separate number for product queries |
-| `NEXT_PUBLIC_SITE_URL` | Public URL used for SEO metadata |
+All settings are `NEXT_PUBLIC_*` env vars (see `.env.example`). They are baked in at
+build time, so **redeploy after changing them**.
 
-Pricing rules (discount off MRP) live in `lib/site-config.ts`.
+| Variable | Example | Purpose |
+| --- | --- | --- |
+| `NEXT_PUBLIC_PHONE_NUMBER` | `8168200335` | Shop phone, shown on the site and used for call links; also the WhatsApp number by default |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | | Optional WhatsApp number for orders if different from the phone |
+| `NEXT_PUBLIC_WHATSAPP_QUERY_NUMBER` | | Optional separate WhatsApp number for product questions |
+| `NEXT_PUBLIC_SERVICE_AREAS` | `Rohtak,Sonipat,Jhajjar` | Delivery districts, comma-separated (empty hides service-area text) |
+| `NEXT_PUBLIC_SERVICE_AREAS_HI` | `रोहतक,सोनीपत,झज्जर` | Same districts in Hindi, same order |
+| `NEXT_PUBLIC_SITE_URL` | `https://example.com` | Public URL for SEO; on Vercel defaults to the production domain |
+| `NEXT_PUBLIC_SHOW_HINDI` | `false` | Show the English/Hindi switch (Hindi pages exist at `/hi` regardless) |
+
+Pricing rules (discount off MRP) live in `lib/site-config.ts`. Deployment steps are in
+[`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
 ## Project layout
 
 ```
-app/            routes, layouts, global styles
+app/[lang]/     routes (English at /, Hindi at /hi), layouts
+app/            global styles, sitemap, robots, icons
+proxy.ts        locale routing
 components/     shared UI (header, footer, WhatsApp button, ...)
 data/           product catalogue (typed)
-lib/            config and helpers
+lib/            config, i18n dictionaries, search, WhatsApp, SEO helpers
 public/products product pack images
 docs/PLAN.md    build plan and commit roadmap
 ```

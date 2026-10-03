@@ -38,6 +38,14 @@ const hi: Dictionary = {
 
   brandTagline: "एक्वाकल्चर समाधान",
 
+  area: {
+    label: "सेवा क्षेत्र",
+    deliver: (areas) => `${areas} में डिलीवरी`,
+    chip: (areas) => `स्वतंत्र डीलर · ${areas} में सेवा`,
+    about: (areas) => `अभी हम ${areas} के किसानों, हैचरी और दुकानों को सप्लाई करते हैं।`,
+    outside: "इन ज़िलों से बाहर हैं? मैसेज करें — हम बताएंगे कि मदद हो सकती है या नहीं।",
+  },
+
   common: {
     orderOnWhatsApp: "WhatsApp पर ऑर्डर करें",
     chatOnWhatsApp: "WhatsApp पर बात करें",
