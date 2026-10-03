@@ -15,7 +15,7 @@ export function ProductCard({ product }: { product: Product }) {
   const names = productNames(product, lang);
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-drop border border-deep/8 bg-white shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-glow">
+    <article className="group relative flex w-full flex-col overflow-hidden rounded-drop border border-deep/8 bg-white shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-glow">
       <ProductImage
         product={product}
         sizes="(min-width: 1024px) 280px, 50vw"

@@ -28,7 +28,7 @@ export function ProductImage({ product, sizes, priority, className = "" }: Props
           fill
           sizes={sizes}
           priority={priority}
-          className="object-contain p-3"
+          className="object-contain p-3 transition-transform duration-500 group-hover:scale-105"
         />
       </div>
     );

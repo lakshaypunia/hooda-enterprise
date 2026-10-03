@@ -8,6 +8,7 @@ import {
   Stethoscope,
   Truck,
 } from "lucide-react";
+import { brands } from "@/data/brands";
 import { getProduct, products, type Product } from "@/data/products";
 import {
   categories,
@@ -74,6 +75,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <ProblemFinder {...ctx} />
       <Categories {...ctx} />
       <Featured {...ctx} />
+      <Brands {...ctx} />
       <WhyUs {...ctx} />
       <HowToOrder {...ctx} />
     </main>
@@ -97,8 +99,24 @@ function Hero({ lang, t, href }: SectionProps) {
           <h1 className="mt-5 max-w-3xl text-4xl leading-[1.1] font-extrabold sm:text-6xl">
             {h.heroTitle1}
             <br />
-            <span className="bg-linear-to-r from-aqua-light to-aqua bg-clip-text text-transparent">
-              {h.heroTitle2}
+            <span className="relative inline-block">
+              <span className="bg-linear-to-r from-aqua-light to-aqua bg-clip-text text-transparent">
+                {h.heroTitle2}
+              </span>
+              <svg
+                aria-hidden
+                viewBox="0 0 300 16"
+                preserveAspectRatio="none"
+                className="absolute -bottom-2 left-0 h-3 w-full text-coral sm:-bottom-3 sm:h-4"
+              >
+                <path
+                  d="M2 10c30-8 60-8 90 0s60 8 90 0 60-8 90 0 20 4 26 2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                />
+              </svg>
             </span>
           </h1>
           <p className="mt-5 max-w-xl text-lg text-foam/85 sm:text-xl">
@@ -146,6 +164,23 @@ function Hero({ lang, t, href }: SectionProps) {
               <WhatsAppIcon className="size-5" /> {t.common.chatOnWhatsApp}
             </a>
           </div>
+
+          <dl className="mt-10 grid max-w-xl grid-cols-2 gap-2 sm:grid-cols-4">
+            {[
+              { value: `${products.length}+`, label: h.stats.products },
+              { value: `${DISCOUNT_PERCENT}%`, label: h.stats.discount },
+              { value: h.stats.species, label: h.stats.speciesLabel },
+              { value: h.stats.ordering, label: h.stats.orderingLabel },
+            ].map((s) => (
+              <div
+                key={s.label}
+                className="flex flex-col-reverse rounded-2xl bg-white/8 px-3 py-2.5 ring-1 ring-white/12 backdrop-blur"
+              >
+                <dt className="text-xs text-foam/70">{s.label}</dt>
+                <dd className="font-display text-lg leading-tight font-bold text-white">{s.value}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
 
         <HeroPacks />
@@ -192,7 +227,7 @@ function HeroPacks() {
 function SectionHeading({ eyebrow, title, intro }: { eyebrow: string; title: string; intro?: string }) {
   return (
     <div className="max-w-2xl">
-      <p className="font-display text-sm font-semibold tracking-widest text-lagoon uppercase">{eyebrow}</p>
+      <p className="eyebrow text-lagoon">{eyebrow}</p>
       <h2 className="mt-2 text-3xl font-bold text-ink sm:text-4xl">{title}</h2>
       {intro && <p className="mt-3 text-lg text-muted">{intro}</p>}
     </div>
@@ -211,7 +246,7 @@ function ProblemFinder({ lang, t, href }: SectionProps) {
         {(Object.keys(problems) as ProblemSlug[]).map((slug) => {
           const text = problemText(slug, lang);
           return (
-            <li key={slug}>
+            <li key={slug} className="reveal">
               <Link
                 href={href(`/products?problem=${slug}`)}
                 className="group flex h-full flex-col items-start gap-3 rounded-2xl border border-deep/8 bg-white p-3.5 transition-all hover:-translate-y-0.5 hover:border-aqua/50 hover:shadow-glow sm:flex-row sm:gap-4 sm:p-4"
@@ -244,27 +279,19 @@ function Categories({ lang, t, href }: SectionProps) {
       <Wave flip className="absolute top-0 left-0 h-12 w-full -translate-y-px text-cream sm:h-16" />
       <div className="mx-auto max-w-6xl px-4 pt-24 pb-24 sm:px-6">
         <div className="max-w-2xl">
-          <p className="font-display text-sm font-semibold tracking-widest text-aqua-light uppercase">
-            {t.home.categoriesEyebrow}
-          </p>
+          <p className="eyebrow text-aqua-light">{t.home.categoriesEyebrow}</p>
           <h2 className="mt-2 text-3xl font-bold sm:text-4xl">{t.home.categoriesTitle}</h2>
         </div>
         <ul className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {(Object.keys(categories) as CategorySlug[]).map((slug) => {
             const cover = getProduct(CATEGORY_COVERS[slug]);
             return (
-              <li key={slug}>
+              <li key={slug} className="reveal">
                 <Link
                   href={href(`/products?category=${slug}`)}
                   className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white/6 ring-1 ring-white/10 transition-all hover:bg-white/10 hover:ring-aqua/60"
                 >
-                  {cover && (
-                    <ProductImage
-                      product={cover}
-                      sizes="(min-width: 1024px) 200px, 45vw"
-                      className="transition-transform duration-500 group-hover:scale-[1.03]"
-                    />
-                  )}
+                  {cover && <ProductImage product={cover} sizes="(min-width: 1024px) 200px, 45vw" />}
                   <span className="flex flex-1 flex-col p-3">
                     <span className="font-display leading-tight font-semibold">
                       {categoryText(slug, lang).label}
@@ -298,8 +325,43 @@ function Featured({ t, href }: SectionProps) {
       </div>
       <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
         {featured.map((p) => (
-          <ProductCard key={p.slug} product={p} />
+          <div key={p.slug} className="reveal flex">
+            <ProductCard product={p} />
+          </div>
         ))}
+      </div>
+    </section>
+  );
+}
+
+function Brands({ t }: SectionProps) {
+  return (
+    <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-20">
+      <div className="reveal grid gap-8 overflow-hidden rounded-[2rem] bg-white p-6 shadow-soft ring-1 ring-deep/6 sm:p-10 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+        <div>
+          <p className="eyebrow text-lagoon">{t.home.brandsEyebrow}</p>
+          <h2 className="mt-2 text-3xl font-bold text-ink sm:text-4xl">{t.home.brandsTitle}</h2>
+          <p className="mt-3 text-lg text-muted">{t.home.brandsText}</p>
+        </div>
+        <ul className="grid gap-3">
+          {Object.values(brands).map((b) => (
+            <li
+              key={b.manufacturer}
+              className="flex items-center gap-4 rounded-2xl bg-linear-to-r from-foam to-cream p-4 ring-1 ring-deep/8"
+            >
+              <span className="grid size-14 shrink-0 place-items-center rounded-drop bg-deep font-display text-xl font-extrabold text-white">
+                {b.manufacturer.charAt(0)}
+              </span>
+              <span>
+                <span className="block font-display text-lg font-bold text-ink">{b.manufacturer}</span>
+                <span className="text-sm text-muted">{b.range}</span>
+              </span>
+            </li>
+          ))}
+          <li className="rounded-2xl border-2 border-dashed border-deep/15 p-4 text-center text-sm font-medium text-muted">
+            {t.home.brandsMore}
+          </li>
+        </ul>
       </div>
     </section>
   );
@@ -316,7 +378,7 @@ function WhyUs({ t }: SectionProps) {
           {t.home.reasons.map((reason, i) => {
             const Icon = REASON_ICONS[i];
             return (
-              <li key={reason.text} className="rounded-drop bg-white p-6 shadow-soft">
+              <li key={reason.text} className="reveal rounded-drop bg-white p-6 shadow-soft">
                 <span className="grid size-12 place-items-center rounded-full bg-linear-to-br from-aqua to-lagoon text-white">
                   <Icon className="size-6" aria-hidden />
                 </span>
@@ -339,9 +401,7 @@ function HowToOrder({ lang, t }: SectionProps) {
         <Bubbles />
         <div className="relative grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:items-center">
           <div>
-            <p className="font-display text-sm font-semibold tracking-widest text-aqua-light uppercase">
-              {t.home.howEyebrow}
-            </p>
+            <p className="eyebrow text-aqua-light">{t.home.howEyebrow}</p>
             <h2 className="mt-2 text-3xl font-bold sm:text-4xl">{t.home.howTitle}</h2>
             <p className="mt-3 text-lg text-foam/80">{t.home.howText}</p>
             <a

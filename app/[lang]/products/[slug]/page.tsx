@@ -14,6 +14,7 @@ import { Wave } from "@/components/icons";
 import { ProblemIcon } from "@/components/problem-icon";
 import { ProductCard } from "@/components/product-card";
 import { ProductImage } from "@/components/product-image";
+import { StickyBuyBar } from "@/components/sticky-buy-bar";
 import { Bubbles } from "@/components/underwater";
 
 export const dynamicParams = false;
@@ -137,6 +138,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
       </div>
 
       <Related {...ctx} />
+      <StickyBuyBar product={product} />
     </main>
   );
 }

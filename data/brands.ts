@@ -5,7 +5,7 @@
  */
 export const brands = {
   "Provet BluNova": {
-    manufacturer: "Provet Pharma Pvt. Ltd.",
+    manufacturer: "Provet Pharma Private Limited",
     range: "BluNova aquaculture range",
     website: "https://provet.in",
   },

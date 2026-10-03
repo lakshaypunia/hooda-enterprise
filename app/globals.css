@@ -38,27 +38,61 @@
   --animate-float: float 7s ease-in-out infinite;
 
   @keyframes bubble {
-    0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
-    10% { opacity: 0.8; }
-    50% { transform: translate(12px, -50vh) scale(1); }
-    100% { transform: translate(-8px, -105vh) scale(1.1); opacity: 0; }
+    0% {
+      transform: translate(0, 0) scale(0.6);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.8;
+    }
+    50% {
+      transform: translate(12px, -50vh) scale(1);
+    }
+    100% {
+      transform: translate(-8px, -105vh) scale(1.1);
+      opacity: 0;
+    }
   }
   @keyframes sway {
-    0%, 100% { transform: rotate(-3deg); }
-    50% { transform: rotate(3deg); }
+    0%,
+    100% {
+      transform: rotate(-3deg);
+    }
+    50% {
+      transform: rotate(3deg);
+    }
   }
   @keyframes swim {
-    0% { transform: translateX(-20vw) translateY(0); }
-    50% { transform: translateX(50vw) translateY(-18px); }
-    100% { transform: translateX(120vw) translateY(0); }
+    0% {
+      transform: translateX(-20vw) translateY(0);
+    }
+    50% {
+      transform: translateX(50vw) translateY(-18px);
+    }
+    100% {
+      transform: translateX(120vw) translateY(0);
+    }
   }
   @keyframes float {
-    0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
-    50% { transform: translateY(-14px) rotate(var(--tilt, 0deg)); }
+    0%,
+    100% {
+      transform: translateY(0) rotate(var(--tilt, 0deg));
+    }
+    50% {
+      transform: translateY(-14px) rotate(var(--tilt, 0deg));
+    }
   }
   @keyframes caustics {
-    0% { background-position: 0% 0%, 100% 0%; }
-    100% { background-position: 100% 100%, 0% 100%; }
+    0% {
+      background-position:
+        0% 0%,
+        100% 0%;
+    }
+    100% {
+      background-position:
+        100% 100%,
+        0% 100%;
+    }
   }
 }
 
@@ -77,7 +111,10 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: var(--font-display);
   letter-spacing: -0.01em;
   text-wrap: balance;
@@ -105,7 +142,9 @@ h1, h2, h3, h4 {
   background-image:
     radial-gradient(ellipse 30% 12% at 30% 20%, rgb(255 255 255 / 0.12), transparent 70%),
     radial-gradient(ellipse 25% 10% at 70% 40%, rgb(255 255 255 / 0.1), transparent 70%);
-  background-size: 200% 200%, 220% 220%;
+  background-size:
+    200% 200%,
+    220% 220%;
   animation: var(--animate-caustics);
 }
 
@@ -117,15 +156,62 @@ h1, h2, h3, h4 {
 /* Subtle scale pattern for light sections. */
 @utility bg-scales {
   background-color: var(--color-cream);
-  background-image: radial-gradient(circle at 50% 120%, transparent 58%, rgb(14 124 134 / 0.06) 60%, transparent 62%);
+  background-image: radial-gradient(
+    circle at 50% 120%,
+    transparent 58%,
+    rgb(14 124 134 / 0.06) 60%,
+    transparent 62%
+  );
   background-size: 28px 18px;
+}
+
+/* Fade-and-rise as an element scrolls into view (progressive enhancement, no JS). */
+@utility reveal {
+  @supports (animation-timeline: view()) {
+    animation: reveal-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Small wave mark before section eyebrows. */
+@utility eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  &::before {
+    content: "";
+    width: 1.75rem;
+    height: 0.5rem;
+    background: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 8'%3E%3Cpath d='M1 4c3-3 6-3 9 0s6 3 9 0 6-3 8 0' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")
+      no-repeat center / contain;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
