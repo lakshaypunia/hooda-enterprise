@@ -52,19 +52,22 @@ Home · /products · /products/[slug] · /water-quality · /about · /contact
 - [x] 8. feat(products): product detail pages (SSG)
 - [x] 9. feat(whatsapp): prefilled buy/query links + enquiry basket
 - [x] 10. feat(content): water-quality guide, about, contact
-- [ ] 11. feat(i18n): Hindi language toggle
-- [ ] 12. feat(seo): metadata, sitemap, OG images, product JSON-LD
+- [x] brand: position as independent dealer across the site
+- [~] 11. feat(i18n): Hindi routing + dictionaries done; switch hidden until Hindi copy is reviewed
+- [x] design: hero stats, brands band, scroll reveals, sticky mobile buy bar
+- [~] 12. feat(seo): metadata, sitemap, robots, icons done — OG preview images + JSON-LD pending
+- [x] config: phone number and service area from env vars
 - [ ] 13. chore: lint, a11y and performance pass
 
 ## Before launch (needs the owner)
 
-- [ ] Real WhatsApp number(s) in `.env.local` / hosting env vars
+- [x] Phone / WhatsApp number (8168200335) and service area (Rohtak, Sonipat, Jhajjar) via env vars
 - [ ] Business address, phone, hours, GSTIN in `lib/site-config.ts`
 - [ ] Own story and photos for /about
 - [ ] Pack photos for the 13 products without one (see docs/IMAGE_SOURCES.md)
 - [ ] Confirm authorised-dealer status / permission to use Provet branding
 - [ ] Decide on the 20 price-list items left out (poultry/livestock range)
-- [ ] Set `NEXT_PUBLIC_SITE_URL` to the live domain
+- [ ] Deploy to Vercel (docs/DEPLOYMENT.md) and set `NEXT_PUBLIC_SITE_URL` once a domain is added
 
 ## Later
 
