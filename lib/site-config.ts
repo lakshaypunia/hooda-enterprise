@@ -7,9 +7,6 @@ export const siteConfig = {
   tagline: "Healthy ponds, better harvests",
   description:
     "Independent dealer and wholesale supplier of aquaculture health products for fish and shrimp farmers.",
-  /** Shown wherever we need to be clear we resell other companies' products. */
-  dealerNote:
-    "Hooda Enterprise is an independent dealer, not a manufacturer. We source genuine products from trusted brands such as Provet Pharma (BluNova) and sell them to farmers at wholesale prices. Product names and trademarks belong to their manufacturers.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
 
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919999999999",
@@ -22,21 +19,28 @@ export const siteConfig = {
   phoneDisplay: "+91 99999 99999",
   email: "",
   address: "Haryana, India",
+  addressHi: "हरियाणा, भारत",
   hours: "Mon–Sat, 9:00 AM – 7:00 PM",
+  hoursHi: "सोम–शनि, सुबह 9 से शाम 7 बजे तक",
 
   /** Brands we currently stock — display names. See data/brands.ts for details. */
   brands: ["Provet Pharma (BluNova)"],
 
+  /** Labels come from the dictionary (t.nav[key]). */
   nav: [
-    { href: "/", label: "Home" },
-    { href: "/products", label: "Products" },
-    { href: "/water-quality", label: "Water Quality" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
+    { href: "/", key: "home" },
+    { href: "/products", key: "products" },
+    { href: "/water-quality", key: "water" },
+    { href: "/about", key: "about" },
+    { href: "/contact", key: "contact" },
   ],
 } as const;
 
+/**
+ * Hindi pages are built at /hi/… but the header switch stays hidden until the
+ * Hindi copy has been reviewed. Set NEXT_PUBLIC_SHOW_HINDI=true to show it.
+ */
+export const SHOW_LANGUAGE_SWITCH = process.env.NEXT_PUBLIC_SHOW_HINDI === "true";
+
 /** Selling price is MRP minus this percentage. */
 export const DISCOUNT_PERCENT = 20;
-
-export const DOSAGE_DISCLAIMER = "Dosages are indicative. Use as advised by an aquaculture consultant.";

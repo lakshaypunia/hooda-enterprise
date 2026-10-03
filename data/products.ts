@@ -1,10 +1,5 @@
 import type { BrandKey } from "./brands";
-import type {
-  ApplicationSlug,
-  CategorySlug,
-  ProblemSlug,
-  SpeciesSlug,
-} from "./taxonomy";
+import type { ApplicationSlug, CategorySlug, ProblemSlug, SpeciesSlug } from "./taxonomy";
 
 /**
  * Product catalogue.
@@ -75,8 +70,14 @@ export const products: Product[] = [
       {
         title: "Shrimp ponds",
         rows: [
-          { label: "5–7 days before stocking", value: "1 kg/acre (low density) · 1.5 kg/acre (high density)" },
-          { label: "Every 10–15 days after stocking", value: "0.5 kg/acre (low density) · 1 kg/acre (high density)" },
+          {
+            label: "5–7 days before stocking",
+            value: "1 kg/acre (low density) · 1.5 kg/acre (high density)",
+          },
+          {
+            label: "Every 10–15 days after stocking",
+            value: "0.5 kg/acre (low density) · 1 kg/acre (high density)",
+          },
         ],
       },
       {
@@ -116,8 +117,14 @@ export const products: Product[] = [
       {
         title: "Shrimp ponds",
         rows: [
-          { label: "5–7 days before stocking", value: "400 g/acre (low density) · 600 g/acre (high density)" },
-          { label: "Every 10–15 days after stocking", value: "200 g/acre (low density) · 400 g/acre (high density)" },
+          {
+            label: "5–7 days before stocking",
+            value: "400 g/acre (low density) · 600 g/acre (high density)",
+          },
+          {
+            label: "Every 10–15 days after stocking",
+            value: "200 g/acre (low density) · 400 g/acre (high density)",
+          },
         ],
       },
       {
@@ -157,9 +164,7 @@ export const products: Product[] = [
     ],
     dosage: [
       {
-        rows: [
-          { label: "Pond application", value: "1–5 litres per acre, depending on pond hygiene" },
-        ],
+        rows: [{ label: "Pond application", value: "1–5 litres per acre, depending on pond hygiene" }],
       },
     ],
     method: "Mix with water or sand and sprinkle over the pond surface.",
@@ -329,9 +334,7 @@ export const products: Product[] = [
     ],
     dosage: [
       {
-        rows: [
-          { label: "Shrimp & fish ponds", value: "Mix Pack 1 and Pack 2 — one combo pack per acre" },
-        ],
+        rows: [{ label: "Shrimp & fish ponds", value: "Mix Pack 1 and Pack 2 — one combo pack per acre" }],
       },
     ],
     packs: [
@@ -365,9 +368,7 @@ export const products: Product[] = [
       "Catalytic action purifies water and improves dissolved oxygen",
       "Cation exchange removes ammonia and improves soil and water quality",
     ],
-    dosage: [
-      { rows: [{ label: "Shrimp & fish ponds", value: "10–15 kg per acre" }] },
-    ],
+    dosage: [{ rows: [{ label: "Shrimp & fish ponds", value: "10–15 kg per acre" }] }],
     packs: [
       { size: "5 kg", mrp: 522, gstPercent: 0, sapCode: "6001097", hsn: "23099090" },
       { size: "10 kg", mrp: 936, gstPercent: 0, sapCode: "6001016", hsn: "23099090" },
@@ -394,9 +395,7 @@ export const products: Product[] = [
       "Adsorbs ammonia and toxic gases",
       "Improves dissolved oxygen and water quality",
     ],
-    dosage: [
-      { rows: [{ label: "Shrimp & fish ponds", value: "10–15 kg per acre" }] },
-    ],
+    dosage: [{ rows: [{ label: "Shrimp & fish ponds", value: "10–15 kg per acre" }] }],
     packs: [{ size: "10 kg", mrp: 2250, gstPercent: 0, sapCode: "6001061", hsn: "23099090" }],
     species: ["fish", "shrimp"],
     applications: ["water", "soil"],
@@ -749,8 +748,7 @@ export const products: Product[] = [
     category: "minerals",
     description:
       "Concentrated ionic mineral blend for shrimp hatcheries. Supports osmoregulation, acid-base balance and skeletal development.",
-    composition:
-      "Calcium, phosphorus, magnesium, sodium, manganese, zinc, copper and cobalt in ionic form.",
+    composition: "Calcium, phosphorus, magnesium, sodium, manganese, zinc, copper and cobalt in ionic form.",
     benefits: [
       "Enhances immunity and disease resistance",
       "Improves survival and growth",
@@ -799,8 +797,7 @@ export const products: Product[] = [
     category: "feed-additives",
     description:
       "Plant extracts with organic acids and short-chain fatty acids that fight vibrio and bacterial infections and improve survival and growth.",
-    composition:
-      "Protected vegetable extracts, organic acids and their salts, and short-chain fatty acids.",
+    composition: "Protected vegetable extracts, organic acids and their salts, and short-chain fatty acids.",
     benefits: [
       "Prevents and controls vibrio loads",
       "Helps prevent white faecal syndrome",
@@ -1099,7 +1096,8 @@ export const products: Product[] = [
     brand: BRAND,
     tagline: "Endectocide for external & internal parasites",
     category: "parasite-control",
-    description: "Ivermectin solution for the control and treatment of external and internal parasites in fish and shrimp.",
+    description:
+      "Ivermectin solution for the control and treatment of external and internal parasites in fish and shrimp.",
     composition: "Ivermectin 0.12% w/v.",
     benefits: ["Controls external parasites", "Controls internal parasites"],
     dosage: [

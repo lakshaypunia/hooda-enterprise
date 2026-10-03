@@ -3,19 +3,20 @@ import { Suspense } from "react";
 import { products } from "@/data/products";
 import { Catalogue } from "@/components/catalogue";
 import { PageBanner } from "@/components/page-banner";
+import { getLocale } from "@/lib/i18n/server";
 import { DISCOUNT_PERCENT } from "@/lib/site-config";
 
-export const metadata: Metadata = {
-  title: "All Products",
-  description:
-    "Browse probiotics, zeolites, oxygen supplements, disinfectants, minerals and feed additives for fish and shrimp ponds. Search by pond problem and order on WhatsApp.",
-};
+export async function generateMetadata({ params }: PageProps<"/[lang]/products">): Promise<Metadata> {
+  const { t } = await getLocale(params);
+  return { title: t.meta.productsTitle, description: t.meta.productsDescription };
+}
 
-export default function ProductsPage() {
+export default async function ProductsPage({ params }: PageProps<"/[lang]/products">) {
+  const { t } = await getLocale(params);
   return (
     <main className="flex-1 pb-4">
-      <PageBanner eyebrow="Product catalogue" title="Find the right product for your pond">
-        {products.length} products for fish and shrimp farming. Every price is {DISCOUNT_PERCENT}% below MRP.
+      <PageBanner eyebrow={t.catalogue.eyebrow} title={t.catalogue.title}>
+        {t.catalogue.intro(products.length, DISCOUNT_PERCENT)}
       </PageBanner>
 
       {/* useSearchParams needs a Suspense boundary so the rest of the page can be prerendered. */}

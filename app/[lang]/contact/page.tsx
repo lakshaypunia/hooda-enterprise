@@ -1,43 +1,47 @@
 import type { Metadata } from "next";
 import { Clock, MapPin, Phone } from "lucide-react";
+import { getLocale } from "@/lib/i18n/server";
 import { siteConfig } from "@/lib/site-config";
-import { GENERAL_ENQUIRY_MESSAGE, whatsappLink } from "@/lib/whatsapp";
+import { generalMessage, whatsappLink } from "@/lib/whatsapp";
 import { EnquiryForm } from "@/components/enquiry-form";
 import { WhatsAppIcon } from "@/components/icons";
 import { PageBanner } from "@/components/page-banner";
 
-export const metadata: Metadata = {
-  title: "Contact Us",
-  description: `Contact ${siteConfig.name} on WhatsApp or phone to order aquaculture products or ask about your pond.`,
-};
+export async function generateMetadata({ params }: PageProps<"/[lang]/contact">): Promise<Metadata> {
+  const { t } = await getLocale(params);
+  return { title: t.meta.contactTitle, description: t.meta.contactDescription };
+}
 
-export default function ContactPage() {
+export default async function ContactPage({ params }: PageProps<"/[lang]/contact">) {
+  const { lang, t } = await getLocale(params);
+  const c = t.contact;
+  const hi = lang === "hi";
   const details = [
     {
       icon: Phone,
-      label: "Phone",
+      label: c.phone,
       value: siteConfig.phoneDisplay,
       href: `tel:+${siteConfig.whatsappNumber}`,
     },
     {
       icon: MapPin,
-      label: "Address",
-      value: siteConfig.address,
+      label: c.address,
+      value: hi ? siteConfig.addressHi : siteConfig.address,
       href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${siteConfig.name} ${siteConfig.address}`)}`,
     },
-    { icon: Clock, label: "Hours", value: siteConfig.hours },
+    { icon: Clock, label: c.hours, value: hi ? siteConfig.hoursHi : siteConfig.hours },
   ];
 
   return (
     <main className="flex-1">
-      <PageBanner eyebrow="Contact" title="We're a WhatsApp message away">
-        Order products, ask about doses, or describe a pond problem — we reply on WhatsApp.
+      <PageBanner eyebrow={c.eyebrow} title={c.title}>
+        {c.intro}
       </PageBanner>
 
       <div className="mx-auto grid max-w-6xl gap-6 px-4 pb-16 sm:px-6 lg:grid-cols-[380px_1fr]">
         <aside className="relative -mt-10 space-y-4">
           <a
-            href={whatsappLink(GENERAL_ENQUIRY_MESSAGE)}
+            href={whatsappLink(generalMessage(lang))}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-4 rounded-[1.75rem] bg-whatsapp p-5 text-abyss shadow-soft transition-transform hover:scale-[1.01]"
@@ -46,8 +50,8 @@ export default function ContactPage() {
               <WhatsAppIcon className="size-8" />
             </span>
             <span>
-              <span className="block font-display text-xl font-bold">Chat on WhatsApp</span>
-              <span className="text-abyss/75">Fastest way to order</span>
+              <span className="block font-display text-xl font-bold">{t.common.chatOnWhatsApp}</span>
+              <span className="text-abyss/75">{c.fastest}</span>
             </span>
           </a>
 
@@ -85,8 +89,8 @@ export default function ContactPage() {
         </aside>
 
         <section className="relative rounded-[1.75rem] bg-white p-5 shadow-soft ring-1 ring-deep/6 sm:p-8 lg:-mt-10">
-          <h2 className="text-2xl font-bold text-ink sm:text-3xl">Send us a question</h2>
-          <p className="mt-1 mb-6 text-muted">Fill in what you can — we&apos;ll reply on WhatsApp.</p>
+          <h2 className="text-2xl font-bold text-ink sm:text-3xl">{c.formTitle}</h2>
+          <p className="mt-1 mb-6 text-muted">{c.formIntro}</p>
           <EnquiryForm />
         </section>
       </div>

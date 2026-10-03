@@ -1,4 +1,5 @@
 import type { Pack, Product } from "@/data/products";
+import { getDictionary, localePath, type Locale } from "./i18n";
 import { formatINR, sellingPrice } from "./pricing";
 import { siteConfig } from "./site-config";
 
@@ -10,58 +11,64 @@ export function whatsappLink(message: string, kind: Kind = "buy") {
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
 
-export const GENERAL_ENQUIRY_MESSAGE = `Hello ${siteConfig.name}, I found your website and would like to know more about your aquaculture products.`;
+export const generalMessage = (lang: Locale) => getDictionary(lang).wa.general(siteConfig.name);
 
-const productUrl = (product: Product) => `${siteConfig.url}/products/${product.slug}`;
+const productUrl = (product: Product, lang: Locale) =>
+  `${siteConfig.url}${localePath(lang, `/products/${product.slug}`)}`;
 
-const priceNote = (pack: Pack) =>
-  pack.mrp ? `${formatINR(sellingPrice(pack.mrp))} each (MRP ${formatINR(pack.mrp)})` : "price on request";
-
-export function buyMessage(product: Product, pack: Pack, qty: number) {
+export function buyMessage(product: Product, pack: Pack, qty: number, lang: Locale) {
+  const w = getDictionary(lang).wa;
+  const price = pack.mrp
+    ? `${formatINR(sellingPrice(pack.mrp))} ${w.each} (MRP ${formatINR(pack.mrp)})`
+    : w.onRequest;
   return [
-    `Hello ${siteConfig.name}, I want to buy:`,
+    w.buyIntro(siteConfig.name),
     ``,
     `*${product.name}* — ${pack.size} × ${qty}`,
-    `Website price: ${priceNote(pack)}`,
+    `${w.websitePrice}: ${price}`,
     ``,
-    `Please confirm availability and delivery.`,
-    productUrl(product),
+    w.confirm,
+    productUrl(product, lang),
   ].join("\n");
 }
 
-export function queryMessage(product: Product) {
-  return [
-    `Hello ${siteConfig.name}, I have a question about *${product.name}*.`,
-    ``,
-    `My pond: (fish / shrimp, area in acres, problem you are facing)`,
-    ``,
-    productUrl(product),
-  ].join("\n");
+export function queryMessage(product: Product, lang: Locale) {
+  const w = getDictionary(lang).wa;
+  return [w.queryIntro(siteConfig.name, product.name), ``, w.queryPond, ``, productUrl(product, lang)].join(
+    "\n",
+  );
 }
 
 export type BasketLine = { product: Product; pack: Pack; qty: number };
 
-export function basketMessage(lines: BasketLine[], customer: { name?: string; location?: string }) {
+export function basketMessage(
+  lines: BasketLine[],
+  customer: { name?: string; location?: string },
+  lang: Locale,
+) {
+  const w = getDictionary(lang).wa;
   let total = 0;
   let unpriced = false;
   const rows = lines.map(({ product, pack, qty }, i) => {
     if (pack.mrp) total += sellingPrice(pack.mrp) * qty;
     else unpriced = true;
-    const price = pack.mrp ? ` — ${formatINR(sellingPrice(pack.mrp) * qty)}` : " — price on request";
+    const price = pack.mrp ? ` — ${formatINR(sellingPrice(pack.mrp) * qty)}` : ` — ${w.onRequest}`;
     return `${i + 1}. *${product.name}* ${pack.size} × ${qty}${price}`;
   });
 
+  const details = [
+    customer.name && `${w.name}: ${customer.name}`,
+    customer.location && `${w.location}: ${customer.location}`,
+  ].filter(Boolean);
+
   return [
-    `Hello ${siteConfig.name}, I want to order:`,
+    w.orderIntro(siteConfig.name),
     ``,
     ...rows,
     ``,
-    `Estimated total: ${formatINR(total)}${unpriced ? " + items on request" : ""}`,
-    customer.name ? `Name: ${customer.name}` : "",
-    customer.location ? `Location: ${customer.location}` : "",
+    `${w.estimated}: ${formatINR(total)}${unpriced ? w.plusOnRequest : ""}`,
+    ...details,
     ``,
-    `Please confirm availability and delivery.`,
-  ]
-    .filter((line, i, all) => line !== "" || all[i - 1] !== "")
-    .join("\n");
+    w.confirm,
+  ].join("\n");
 }

@@ -3,25 +3,26 @@
 import { useState, type FormEvent } from "react";
 import { siteConfig } from "@/lib/site-config";
 import { whatsappLink } from "@/lib/whatsapp";
+import { useI18n } from "./i18n-provider";
 import { WhatsAppIcon } from "./icons";
-
-const FARM_TYPES = ["Fish pond", "Shrimp pond", "Hatchery", "Dealer / shop", "Other"];
 
 /** Builds a WhatsApp query from a few fields — nothing is sent to a server. */
 export function EnquiryForm() {
-  const [form, setForm] = useState({ name: "", location: "", type: FARM_TYPES[0], area: "", message: "" });
+  const { t } = useI18n();
+  const c = t.contact;
+  const [form, setForm] = useState({ name: "", location: "", type: c.types[0], area: "", message: "" });
   const set = (key: keyof typeof form) => (e: { target: { value: string } }) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const details = [
-      form.name.trim() && `Name: ${form.name.trim()}`,
-      form.location.trim() && `Location: ${form.location.trim()}`,
-      `Farm type: ${form.type}`,
-      form.area.trim() && `Pond area: ${form.area.trim()}`,
+      form.name.trim() && `${t.wa.name}: ${form.name.trim()}`,
+      form.location.trim() && `${t.wa.location}: ${form.location.trim()}`,
+      `${t.wa.farmType}: ${form.type}`,
+      form.area.trim() && `${t.wa.pondArea}: ${form.area.trim()}`,
     ].filter(Boolean);
-    const text = [`Hello ${siteConfig.name},`, "", form.message.trim(), "", ...details].join("\n");
+    const text = [t.wa.hello(siteConfig.name), "", form.message.trim(), "", ...details].join("\n");
     window.open(whatsappLink(text, "query"), "_blank", "noopener,noreferrer");
   };
 
@@ -32,11 +33,11 @@ export function EnquiryForm() {
     <form onSubmit={onSubmit} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block">
-          <span className="text-sm font-semibold text-ink">Your name</span>
+          <span className="text-sm font-semibold text-ink">{c.name}</span>
           <input value={form.name} onChange={set("name")} autoComplete="name" className={input} />
         </label>
         <label className="block">
-          <span className="text-sm font-semibold text-ink">Village / town</span>
+          <span className="text-sm font-semibold text-ink">{c.location}</span>
           <input
             value={form.location}
             onChange={set("location")}
@@ -45,26 +46,26 @@ export function EnquiryForm() {
           />
         </label>
         <label className="block">
-          <span className="text-sm font-semibold text-ink">You are a</span>
+          <span className="text-sm font-semibold text-ink">{c.youAre}</span>
           <select value={form.type} onChange={set("type")} className={input}>
-            {FARM_TYPES.map((t) => (
-              <option key={t}>{t}</option>
+            {c.types.map((type) => (
+              <option key={type}>{type}</option>
             ))}
           </select>
         </label>
         <label className="block">
-          <span className="text-sm font-semibold text-ink">Pond area (optional)</span>
-          <input value={form.area} onChange={set("area")} placeholder="e.g. 2 acres" className={input} />
+          <span className="text-sm font-semibold text-ink">{c.area}</span>
+          <input value={form.area} onChange={set("area")} placeholder={c.areaPlaceholder} className={input} />
         </label>
       </div>
       <label className="block">
-        <span className="text-sm font-semibold text-ink">Your question</span>
+        <span className="text-sm font-semibold text-ink">{c.question}</span>
         <textarea
           value={form.message}
           onChange={set("message")}
           required
           rows={4}
-          placeholder="Describe your pond problem or the products you need"
+          placeholder={c.questionPlaceholder}
           className={input}
         />
       </label>
@@ -72,11 +73,9 @@ export function EnquiryForm() {
         type="submit"
         className="flex w-full items-center justify-center gap-2 rounded-full bg-whatsapp px-6 py-3.5 text-lg font-bold text-abyss transition-transform hover:scale-[1.02] sm:w-auto"
       >
-        <WhatsAppIcon className="size-6" /> Send on WhatsApp
+        <WhatsAppIcon className="size-6" /> {c.send}
       </button>
-      <p className="text-sm text-muted">
-        This opens WhatsApp with your message ready. Nothing is stored on this site.
-      </p>
+      <p className="text-sm text-muted">{c.privacy}</p>
     </form>
   );
 }

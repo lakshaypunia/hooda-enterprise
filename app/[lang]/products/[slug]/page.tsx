@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Atom, Check, ChevronRight, FlaskConical, Info, ListChecks } from "lucide-react";
+import { Atom, Check, ChevronRight, FlaskConical, Info, Languages, ListChecks } from "lucide-react";
 import { brands } from "@/data/brands";
 import { getProduct, products, type Product } from "@/data/products";
-import { applications, categories, problems, species } from "@/data/taxonomy";
-import { DOSAGE_DISCLAIMER } from "@/lib/site-config";
+import { productNames, productTagline } from "@/data/products-hi";
+import { applicationLabel, categoryText, problemText, speciesLabel } from "@/data/taxonomy";
+import type { Dictionary, Locale } from "@/lib/i18n";
+import { getLocale } from "@/lib/i18n/server";
 import { BuyPanel } from "@/components/buy-panel";
 import { Wave } from "@/components/icons";
 import { ProblemIcon } from "@/components/problem-icon";
@@ -20,18 +22,26 @@ export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps<"/products/[slug]">): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<"/[lang]/products/[slug]">): Promise<Metadata> {
+  const { lang } = await getLocale(params);
   const product = getProduct((await params).slug);
   if (!product) return {};
+  const names = productNames(product, lang);
   return {
-    title: `${product.name} — ${product.tagline}`,
+    title: `${names.primary} — ${productTagline(product, lang)}`,
     description: product.description,
   };
 }
 
-export default async function ProductPage({ params }: PageProps<"/products/[slug]">) {
+type Ctx = { lang: Locale; t: Dictionary; href: (path: string) => string; product: Product };
+
+export default async function ProductPage({ params }: PageProps<"/[lang]/products/[slug]">) {
+  const { lang, t, href } = await getLocale(params);
   const product = getProduct((await params).slug);
   if (!product) notFound();
+  const ctx: Ctx = { lang, t, href, product };
+  const names = productNames(product, lang);
+  const brand = brands[product.brand];
 
   return (
     <main className="flex-1">
@@ -39,17 +49,17 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
         <div aria-hidden className="absolute inset-0 caustics" />
         <Bubbles />
         <div className="relative mx-auto max-w-6xl px-4 pt-6 pb-20 sm:px-6 sm:pb-24">
-          <nav aria-label="Breadcrumb" className="text-sm text-foam/75">
+          <nav aria-label={t.product.breadcrumb} className="text-sm text-foam/75">
             <ol className="flex flex-wrap items-center gap-1">
               <li>
-                <Link href="/products" className="hover:text-white">
-                  Products
+                <Link href={href("/products")} className="hover:text-white">
+                  {t.nav.products}
                 </Link>
               </li>
               <ChevronRight className="size-3.5" aria-hidden />
               <li>
-                <Link href={`/products?category=${product.category}`} className="hover:text-white">
-                  {categories[product.category].label}
+                <Link href={href(`/products?category=${product.category}`)} className="hover:text-white">
+                  {categoryText(product.category, lang).label}
                 </Link>
               </li>
             </ol>
@@ -69,22 +79,22 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
 
             <div>
               <p className="font-display text-sm font-semibold tracking-widest text-aqua-light uppercase">
-                {brands[product.brand].range} · by {brands[product.brand].manufacturer}
+                {t.dealer.rangeBy(brand.range, brand.manufacturer)}
               </p>
               <h1 className="mt-1 text-4xl leading-tight font-extrabold sm:text-5xl">
-                {product.name}
+                {names.primary}
                 <span className="mt-1 block font-display text-2xl font-semibold text-aqua-light sm:text-3xl">
-                  {product.nameHi}
+                  {names.secondary}
                 </span>
               </h1>
-              <p className="mt-3 text-lg text-foam/90 sm:text-xl">{product.tagline}</p>
+              <p className="mt-3 text-lg text-foam/90 sm:text-xl">{productTagline(product, lang)}</p>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {product.species.map((s) => (
                   <li
                     key={s}
                     className="rounded-full bg-white/12 px-3 py-1 text-sm font-medium ring-1 ring-white/15"
                   >
-                    {species[s].label}
+                    {speciesLabel(s, lang)}
                   </li>
                 ))}
                 {product.applications.map((a) => (
@@ -92,11 +102,13 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
                     key={a}
                     className="rounded-full bg-aqua/20 px-3 py-1 text-sm font-medium text-aqua-light"
                   >
-                    {applications[a].label}
+                    {applicationLabel(a, lang)}
                   </li>
                 ))}
               </ul>
-              <p className="mt-5 max-w-xl text-foam/85">{product.description}</p>
+              <p className="mt-5 max-w-xl text-foam/85" lang="en">
+                {product.description}
+              </p>
             </div>
           </div>
         </div>
@@ -105,10 +117,16 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
 
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1fr_380px]">
         <div className="space-y-8 lg:col-start-1 lg:row-start-1">
-          <Benefits product={product} />
-          <Dosage product={product} />
-          <Composition product={product} />
-          <UsedFor product={product} />
+          {t.product.detailsNote && (
+            <p className="flex gap-2 rounded-2xl bg-sand/60 p-4 text-sm text-ink/80">
+              <Languages className="mt-0.5 size-4 shrink-0 text-lagoon" aria-hidden />
+              {t.product.detailsNote}
+            </p>
+          )}
+          <Benefits {...ctx} />
+          <Dosage {...ctx} />
+          <Composition {...ctx} />
+          <UsedFor {...ctx} />
         </div>
 
         <aside className="order-first lg:order-none lg:col-start-2 lg:row-start-1">
@@ -118,7 +136,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
         </aside>
       </div>
 
-      <Related product={product} />
+      <Related {...ctx} />
     </main>
   );
 }
@@ -135,10 +153,10 @@ function Card({ icon, title, children }: { icon: ReactNode; title: string; child
   );
 }
 
-function Benefits({ product }: { product: Product }) {
+function Benefits({ t, product }: Ctx) {
   return (
-    <Card icon={<ListChecks className="size-5" />} title="Benefits">
-      <ul className="grid gap-2.5 sm:grid-cols-2">
+    <Card icon={<ListChecks className="size-5" />} title={t.product.benefits}>
+      <ul className="grid gap-2.5 sm:grid-cols-2" lang="en">
         {product.benefits.map((b) => (
           <li key={b} className="flex gap-2.5">
             <Check className="mt-0.5 size-5 shrink-0 rounded-full bg-kelp/15 p-0.5 text-kelp" aria-hidden />
@@ -150,10 +168,10 @@ function Benefits({ product }: { product: Product }) {
   );
 }
 
-function Dosage({ product }: { product: Product }) {
+function Dosage({ t, product }: Ctx) {
   return (
-    <Card icon={<FlaskConical className="size-5" />} title="Dosage">
-      <div className="space-y-5">
+    <Card icon={<FlaskConical className="size-5" />} title={t.product.dosage}>
+      <div className="space-y-5" lang="en">
         {product.dosage.map((group, i) => (
           <div key={i}>
             {group.title && (
@@ -175,39 +193,41 @@ function Dosage({ product }: { product: Product }) {
       </div>
       {product.method && (
         <p className="mt-5 rounded-2xl bg-foam p-4 text-deep">
-          <strong className="font-semibold">How to apply: </strong>
-          {product.method}
+          <strong className="font-semibold">{t.product.howToApply} </strong>
+          <span lang="en">{product.method}</span>
         </p>
       )}
       <p className="mt-4 flex gap-2 text-sm text-muted">
         <Info className="mt-0.5 size-4 shrink-0" aria-hidden />
-        {DOSAGE_DISCLAIMER}
+        {t.product.disclaimer}
       </p>
     </Card>
   );
 }
 
-function Composition({ product }: { product: Product }) {
+function Composition({ t, product }: Ctx) {
   return (
-    <Card icon={<Atom className="size-5" />} title="Composition">
-      <p className="text-ink/85">{product.composition}</p>
+    <Card icon={<Atom className="size-5" />} title={t.product.composition}>
+      <p className="text-ink/85" lang="en">
+        {product.composition}
+      </p>
     </Card>
   );
 }
 
-function UsedFor({ product }: { product: Product }) {
+function UsedFor({ lang, t, href, product }: Ctx) {
   return (
     <section>
-      <h2 className="text-2xl font-bold text-ink">Helps with</h2>
+      <h2 className="text-2xl font-bold text-ink">{t.product.helpsWith}</h2>
       <ul className="mt-3 flex flex-wrap gap-2">
         {product.problems.map((slug) => (
           <li key={slug}>
             <Link
-              href={`/products?problem=${slug}`}
+              href={href(`/products?problem=${slug}`)}
               className="inline-flex items-center gap-2 rounded-full border border-deep/12 bg-white px-4 py-2 font-medium text-ink transition-colors hover:border-aqua hover:bg-foam"
             >
               <ProblemIcon problem={slug} className="size-4 text-lagoon" />
-              {problems[slug].label}
+              {problemText(slug, lang).label}
             </Link>
           </li>
         ))}
@@ -216,7 +236,7 @@ function UsedFor({ product }: { product: Product }) {
   );
 }
 
-function Related({ product }: { product: Product }) {
+function Related({ t, product }: Ctx) {
   // Rank by shared problems, then same category.
   const related = products
     .filter((p) => p.slug !== product.slug)
@@ -236,7 +256,7 @@ function Related({ product }: { product: Product }) {
   return (
     <section className="bg-scales">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-        <h2 className="text-3xl font-bold text-ink">Often used together</h2>
+        <h2 className="text-3xl font-bold text-ink">{t.product.related}</h2>
         <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
           {related.map((p) => (
             <ProductCard key={p.slug} product={p} />

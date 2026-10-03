@@ -5,15 +5,18 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Check, ShoppingBasket, Trash2, X } from "lucide-react";
 import { getProduct } from "@/data/products";
+import { productNames } from "@/data/products-hi";
 import { basket, useBasket } from "@/lib/basket";
 import { formatINR, sellingPrice } from "@/lib/pricing";
 import { basketMessage, whatsappLink, type BasketLine } from "@/lib/whatsapp";
 import { QtyStepper } from "./buy-panel";
+import { useI18n } from "./i18n-provider";
 import { WhatsAppIcon } from "./icons";
 import { ProductImage } from "./product-image";
 
 /** Header button that opens the enquiry list drawer. */
 export function BasketButton() {
+  const { t } = useI18n();
   const { items, addedCount, lastAdded } = useBasket();
   const dialog = useRef<HTMLDialogElement>(null);
   const count = items.reduce((n, i) => n + i.qty, 0);
@@ -26,7 +29,7 @@ export function BasketButton() {
       <button
         type="button"
         onClick={open}
-        aria-label={`Enquiry list, ${count} items`}
+        aria-label={t.basket.button(count)}
         className="relative grid size-10 place-items-center rounded-full text-white hover:bg-white/10"
       >
         <ShoppingBasket className="size-6" />
@@ -39,7 +42,7 @@ export function BasketButton() {
 
       <dialog
         ref={dialog}
-        aria-label="Enquiry list"
+        aria-label={t.basket.title}
         onClick={(e) => e.target === dialog.current && close()}
         className="fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-[min(28rem,100vw)] max-w-none bg-cream p-0 text-ink shadow-2xl backdrop:bg-abyss/60 backdrop:backdrop-blur-sm"
       >
@@ -53,6 +56,7 @@ export function BasketButton() {
 }
 
 function BasketDrawer({ onClose }: { onClose: () => void }) {
+  const { lang, t, href } = useI18n();
   const { items } = useBasket();
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
@@ -69,13 +73,13 @@ function BasketDrawer({ onClose }: { onClose: () => void }) {
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between bg-deep px-5 py-4 text-white">
         <div>
-          <h2 className="text-xl font-bold">Your enquiry list</h2>
-          <p className="text-sm text-aqua-light">Send everything in one WhatsApp message</p>
+          <h2 className="text-xl font-bold">{t.basket.title}</h2>
+          <p className="text-sm text-aqua-light">{t.basket.subtitle}</p>
         </div>
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close enquiry list"
+          aria-label={t.basket.close}
           className="grid size-10 place-items-center rounded-full hover:bg-white/10"
         >
           <X className="size-6" />
@@ -87,65 +91,68 @@ function BasketDrawer({ onClose }: { onClose: () => void }) {
           <span className="grid size-16 place-items-center rounded-full bg-foam text-lagoon">
             <ShoppingBasket className="size-8" />
           </span>
-          <p className="mt-4 font-display text-xl font-semibold">Your list is empty</p>
-          <p className="mt-1 text-muted">Add products, then send the whole list to us on WhatsApp.</p>
+          <p className="mt-4 font-display text-xl font-semibold">{t.basket.emptyTitle}</p>
+          <p className="mt-1 text-muted">{t.basket.emptyText}</p>
           <Link
-            href="/products"
+            href={href("/products")}
             onClick={onClose}
             className="mt-5 rounded-full bg-coral px-5 py-2.5 font-semibold text-white hover:bg-coral-dark"
           >
-            Browse products
+            {t.common.browseProducts}
           </Link>
         </div>
       ) : (
         <>
           <ul className="flex-1 divide-y divide-deep/8 overflow-y-auto px-4">
-            {lines.map(({ product, pack, qty }) => (
-              <li key={`${product.slug}-${pack.size}`} className="flex gap-3 py-4">
-                <ProductImage
-                  product={product}
-                  sizes="72px"
-                  className="w-18 shrink-0 rounded-xl ring-1 ring-deep/8"
-                />
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-2">
-                    <Link
-                      href={`/products/${product.slug}`}
-                      onClick={onClose}
-                      className="font-display text-lg leading-tight font-semibold hover:text-lagoon"
-                    >
-                      {product.name}
-                      <span className="block text-sm font-medium text-muted">{pack.size}</span>
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={() => basket.remove(product.slug, pack.size)}
-                      aria-label={`Remove ${product.name} ${pack.size}`}
-                      className="grid size-8 shrink-0 place-items-center rounded-full text-muted hover:bg-coral/10 hover:text-coral-dark"
-                    >
-                      <Trash2 className="size-4" />
-                    </button>
+            {lines.map(({ product, pack, qty }) => {
+              const label = `${product.name} ${pack.size}`;
+              return (
+                <li key={`${product.slug}-${pack.size}`} className="flex gap-3 py-4">
+                  <ProductImage
+                    product={product}
+                    sizes="72px"
+                    className="w-18 shrink-0 rounded-xl ring-1 ring-deep/8"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <Link
+                        href={href(`/products/${product.slug}`)}
+                        onClick={onClose}
+                        className="font-display text-lg leading-tight font-semibold hover:text-lagoon"
+                      >
+                        {productNames(product, lang).primary}
+                        <span className="block text-sm font-medium text-muted">{pack.size}</span>
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => basket.remove(product.slug, pack.size)}
+                        aria-label={t.basket.remove(label)}
+                        className="grid size-8 shrink-0 place-items-center rounded-full text-muted hover:bg-coral/10 hover:text-coral-dark"
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between gap-2">
+                      <QtyStepper
+                        size="sm"
+                        value={qty}
+                        onChange={(q) => basket.setQty(product.slug, pack.size, q)}
+                        label={label}
+                      />
+                      <span className="font-display font-bold">
+                        {pack.mrp ? formatINR(sellingPrice(pack.mrp) * qty) : t.basket.onRequest}
+                      </span>
+                    </div>
                   </div>
-                  <div className="mt-2 flex items-center justify-between gap-2">
-                    <QtyStepper
-                      size="sm"
-                      value={qty}
-                      onChange={(q) => basket.setQty(product.slug, pack.size, q)}
-                      label={`${product.name} ${pack.size}`}
-                    />
-                    <span className="font-display font-bold">
-                      {pack.mrp ? formatINR(sellingPrice(pack.mrp) * qty) : "On request"}
-                    </span>
-                  </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
 
           <div className="space-y-3 border-t border-deep/10 bg-white p-4">
             <div className="grid grid-cols-2 gap-2">
               <label className="block">
-                <span className="text-sm font-medium text-muted">Your name (optional)</span>
+                <span className="text-sm font-medium text-muted">{t.basket.name}</span>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -154,7 +161,7 @@ function BasketDrawer({ onClose }: { onClose: () => void }) {
                 />
               </label>
               <label className="block">
-                <span className="text-sm font-medium text-muted">Village / town</span>
+                <span className="text-sm font-medium text-muted">{t.basket.location}</span>
                 <input
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
@@ -163,24 +170,29 @@ function BasketDrawer({ onClose }: { onClose: () => void }) {
                 />
               </label>
             </div>
-            <p className="flex items-baseline justify-between">
-              <span className="text-muted">Estimated total{hasUnpriced && " (+ items on request)"}</span>
+            <p className="flex items-baseline justify-between gap-2">
+              <span className="text-muted">
+                {t.basket.estimated}
+                {hasUnpriced && t.basket.plusOnRequest}
+              </span>
               <span className="font-display text-2xl font-bold">{formatINR(total)}</span>
             </p>
             <a
-              href={whatsappLink(basketMessage(lines, { name: name.trim(), location: location.trim() }))}
+              href={whatsappLink(
+                basketMessage(lines, { name: name.trim(), location: location.trim() }, lang),
+              )}
               target="_blank"
               rel="noopener noreferrer"
               className="flex w-full items-center justify-center gap-2 rounded-full bg-whatsapp px-5 py-3.5 text-lg font-bold text-abyss transition-transform hover:scale-[1.02]"
             >
-              <WhatsAppIcon className="size-6" /> Send order on WhatsApp
+              <WhatsAppIcon className="size-6" /> {t.basket.send}
             </a>
             <button
               type="button"
               onClick={() => basket.clear()}
               className="w-full text-sm font-semibold text-muted hover:text-coral-dark"
             >
-              Clear list
+              {t.basket.clear}
             </button>
           </div>
         </>
@@ -190,10 +202,11 @@ function BasketDrawer({ onClose }: { onClose: () => void }) {
 }
 
 function AddedToast({ slug, size, onOpen }: { slug: string; size: string; onOpen: () => void }) {
+  const { lang, t } = useI18n();
   const [visible, setVisible] = useState(true);
   useEffect(() => {
-    const t = setTimeout(() => setVisible(false), 3500);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setVisible(false), 3500);
+    return () => clearTimeout(timer);
   }, []);
   const product = getProduct(slug);
   if (!visible || !product) return null;
@@ -208,8 +221,8 @@ function AddedToast({ slug, size, onOpen }: { slug: string; size: string; onOpen
         <Check className="size-5" />
       </span>
       <span className="min-w-0 flex-1 text-sm">
-        <strong className="block truncate">{product.name}</strong>
-        {size} added to your list
+        <strong className="block truncate">{productNames(product, lang).primary}</strong>
+        {size} {t.basket.added}
       </span>
       <button
         type="button"
@@ -219,7 +232,7 @@ function AddedToast({ slug, size, onOpen }: { slug: string; size: string; onOpen
         }}
         className="shrink-0 rounded-full bg-white/12 px-3 py-1.5 text-sm font-semibold hover:bg-white/20"
       >
-        View list
+        {t.basket.view}
       </button>
     </div>,
     document.body,

@@ -9,10 +9,18 @@ import {
   Truck,
 } from "lucide-react";
 import { getProduct, products, type Product } from "@/data/products";
-import { categories, problems, type CategorySlug, type ProblemSlug } from "@/data/taxonomy";
-import { plural } from "@/lib/format";
+import {
+  categories,
+  categoryText,
+  problems,
+  problemText,
+  type CategorySlug,
+  type ProblemSlug,
+} from "@/data/taxonomy";
+import type { Dictionary, Locale } from "@/lib/i18n";
+import { getLocale } from "@/lib/i18n/server";
 import { DISCOUNT_PERCENT, siteConfig } from "@/lib/site-config";
-import { GENERAL_ENQUIRY_MESSAGE, whatsappLink } from "@/lib/whatsapp";
+import { generalMessage, whatsappLink } from "@/lib/whatsapp";
 import { Wave, WhatsAppIcon } from "@/components/icons";
 import { ProblemIcon } from "@/components/problem-icon";
 import { ProductCard } from "@/components/product-card";
@@ -56,20 +64,24 @@ const countBy = <K extends string>(key: (p: Product) => K | K[]) => {
 const categoryCounts = countBy((p) => p.category);
 const problemCounts = countBy((p) => p.problems);
 
-export default function Home() {
+type SectionProps = { lang: Locale; t: Dictionary; href: (path: string) => string };
+
+export default async function Home({ params }: PageProps<"/[lang]">) {
+  const ctx = await getLocale(params);
   return (
     <main>
-      <Hero />
-      <ProblemFinder />
-      <Categories />
-      <Featured />
-      <WhyUs />
-      <HowToOrder />
+      <Hero {...ctx} />
+      <ProblemFinder {...ctx} />
+      <Categories {...ctx} />
+      <Featured {...ctx} />
+      <WhyUs {...ctx} />
+      <HowToOrder {...ctx} />
     </main>
   );
 }
 
-function Hero() {
+function Hero({ lang, t, href }: SectionProps) {
+  const h = t.home;
   return (
     <section className="relative isolate overflow-hidden bg-underwater text-white">
       <div aria-hidden className="absolute inset-0 caustics" />
@@ -80,58 +92,58 @@ function Hero() {
         <div>
           <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1 text-sm text-aqua-light backdrop-blur">
             <span className="size-2 rounded-full bg-whatsapp" />
-            Independent dealer · Wholesale aquaculture supplies
+            {h.heroChip}
           </p>
-          <h1 className="mt-5 max-w-3xl text-4xl leading-[1.05] font-extrabold sm:text-6xl">
-            Healthy ponds,
+          <h1 className="mt-5 max-w-3xl text-4xl leading-[1.1] font-extrabold sm:text-6xl">
+            {h.heroTitle1}
             <br />
             <span className="bg-linear-to-r from-aqua-light to-aqua bg-clip-text text-transparent">
-              better harvests.
+              {h.heroTitle2}
             </span>
           </h1>
           <p className="mt-5 max-w-xl text-lg text-foam/85 sm:text-xl">
-            Probiotics, zeolites, minerals, disinfectants and feed additives from trusted brands like{" "}
-            {siteConfig.brands[0]} — at <strong className="text-white">{DISCOUNT_PERCENT}% below MRP</strong>,
-            ordered straight on WhatsApp.
+            {h.heroTextBefore} {siteConfig.brands[0]} {h.heroTextAt}{" "}
+            <strong className="text-white">{h.heroTextBelow(DISCOUNT_PERCENT)}</strong>
+            {h.heroTextAfter}
           </p>
 
           <form
-            action="/products"
+            action={href("/products")}
             className="mt-8 flex max-w-xl items-center gap-2 rounded-full bg-white p-1.5 shadow-soft"
           >
             <Search className="ml-3 size-5 shrink-0 text-muted" aria-hidden />
             <label htmlFor="hero-search" className="sr-only">
-              Search products
+              {h.searchLabel}
             </label>
             <input
               id="hero-search"
               name="q"
               type="search"
-              placeholder="Search a product or problem — e.g. ammonia, Zeomin"
+              placeholder={h.searchPlaceholder}
               className="min-w-0 flex-1 bg-transparent py-2.5 text-base text-ink placeholder:text-muted/80 focus:outline-none"
             />
             <button
               type="submit"
               className="rounded-full bg-coral px-5 py-2.5 font-semibold text-white transition-colors hover:bg-coral-dark"
             >
-              Search
+              {h.searchButton}
             </button>
           </form>
 
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
-              href="/products"
+              href={href("/products")}
               className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 font-semibold transition-colors hover:bg-white/10"
             >
-              Browse all {products.length} products <ArrowRight className="size-4" />
+              {h.browseAll(products.length)} <ArrowRight className="size-4" />
             </Link>
             <a
-              href={whatsappLink(GENERAL_ENQUIRY_MESSAGE)}
+              href={whatsappLink(generalMessage(lang))}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-whatsapp px-5 py-2.5 font-semibold text-abyss transition-transform hover:scale-[1.03]"
             >
-              <WhatsAppIcon className="size-5" /> Chat on WhatsApp
+              <WhatsAppIcon className="size-5" /> {t.common.chatOnWhatsApp}
             </a>
           </div>
         </div>
@@ -187,52 +199,55 @@ function SectionHeading({ eyebrow, title, intro }: { eyebrow: string; title: str
   );
 }
 
-function ProblemFinder() {
+function ProblemFinder({ lang, t, href }: SectionProps) {
   return (
     <section id="problems" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16 sm:px-6 sm:py-20">
       <SectionHeading
-        eyebrow="Find by problem"
-        title="What's troubling your pond?"
-        intro="Pick the problem you're facing and we'll show the products that help."
+        eyebrow={t.home.problemsEyebrow}
+        title={t.home.problemsTitle}
+        intro={t.home.problemsIntro}
       />
       <ul className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-3">
-        {(Object.keys(problems) as ProblemSlug[]).map((slug) => (
-          <li key={slug}>
-            <Link
-              href={`/products?problem=${slug}`}
-              className="group flex h-full flex-col items-start gap-3 rounded-2xl border border-deep/8 bg-white p-3.5 sm:flex-row sm:gap-4 sm:p-4 transition-all hover:-translate-y-0.5 hover:border-aqua/50 hover:shadow-glow"
-            >
-              <span className="grid size-10 shrink-0 place-items-center rounded-drop bg-foam sm:size-12 text-lagoon transition-colors group-hover:bg-lagoon group-hover:text-white">
-                <ProblemIcon problem={slug} className="size-6" />
-              </span>
-              <span className="min-w-0">
-                <span className="block font-display text-base leading-tight font-semibold text-ink sm:text-lg">
-                  {problems[slug].label}
+        {(Object.keys(problems) as ProblemSlug[]).map((slug) => {
+          const text = problemText(slug, lang);
+          return (
+            <li key={slug}>
+              <Link
+                href={href(`/products?problem=${slug}`)}
+                className="group flex h-full flex-col items-start gap-3 rounded-2xl border border-deep/8 bg-white p-3.5 transition-all hover:-translate-y-0.5 hover:border-aqua/50 hover:shadow-glow sm:flex-row sm:gap-4 sm:p-4"
+              >
+                <span className="grid size-10 shrink-0 place-items-center rounded-drop bg-foam text-lagoon transition-colors group-hover:bg-lagoon group-hover:text-white sm:size-12">
+                  <ProblemIcon problem={slug} className="size-6" />
                 </span>
-                <span className="mt-0.5 hidden text-sm text-muted sm:block">{problems[slug].hint}</span>
-                <span className="mt-1.5 inline-flex items-center gap-1 text-sm font-semibold text-lagoon">
-                  {plural(problemCounts[slug] ?? 0, "product")}
-                  <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+                <span className="min-w-0">
+                  <span className="block font-display text-base leading-tight font-semibold text-ink sm:text-lg">
+                    {text.label}
+                  </span>
+                  <span className="mt-0.5 hidden text-sm text-muted sm:block">{text.hint}</span>
+                  <span className="mt-1.5 inline-flex items-center gap-1 text-sm font-semibold text-lagoon">
+                    {t.common.products(problemCounts[slug] ?? 0)}
+                    <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </span>
                 </span>
-              </span>
-            </Link>
-          </li>
-        ))}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
 }
 
-function Categories() {
+function Categories({ lang, t, href }: SectionProps) {
   return (
     <section className="relative bg-deep text-white">
       <Wave flip className="absolute top-0 left-0 h-12 w-full -translate-y-px text-cream sm:h-16" />
       <div className="mx-auto max-w-6xl px-4 pt-24 pb-24 sm:px-6">
         <div className="max-w-2xl">
           <p className="font-display text-sm font-semibold tracking-widest text-aqua-light uppercase">
-            Shop by category
+            {t.home.categoriesEyebrow}
           </p>
-          <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Everything a pond needs</h2>
+          <h2 className="mt-2 text-3xl font-bold sm:text-4xl">{t.home.categoriesTitle}</h2>
         </div>
         <ul className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {(Object.keys(categories) as CategorySlug[]).map((slug) => {
@@ -240,7 +255,7 @@ function Categories() {
             return (
               <li key={slug}>
                 <Link
-                  href={`/products?category=${slug}`}
+                  href={href(`/products?category=${slug}`)}
                   className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white/6 ring-1 ring-white/10 transition-all hover:bg-white/10 hover:ring-aqua/60"
                 >
                   {cover && (
@@ -251,9 +266,11 @@ function Categories() {
                     />
                   )}
                   <span className="flex flex-1 flex-col p-3">
-                    <span className="font-display leading-tight font-semibold">{categories[slug].label}</span>
+                    <span className="font-display leading-tight font-semibold">
+                      {categoryText(slug, lang).label}
+                    </span>
                     <span className="mt-1 text-sm text-aqua-light">
-                      {plural(categoryCounts[slug] ?? 0, "product")}
+                      {t.common.products(categoryCounts[slug] ?? 0)}
                     </span>
                   </span>
                 </Link>
@@ -267,16 +284,16 @@ function Categories() {
   );
 }
 
-function Featured() {
+function Featured({ t, href }: SectionProps) {
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <SectionHeading eyebrow="Farmer favourites" title="Popular products" />
+        <SectionHeading eyebrow={t.home.featuredEyebrow} title={t.home.featuredTitle} />
         <Link
-          href="/products"
+          href={href("/products")}
           className="inline-flex items-center gap-1.5 font-semibold text-lagoon hover:text-deep"
         >
-          View all products <ArrowRight className="size-4" />
+          {t.common.viewAllProducts} <ArrowRight className="size-4" />
         </Link>
       </div>
       <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
@@ -288,57 +305,33 @@ function Featured() {
   );
 }
 
-const REASONS = [
-  {
-    icon: BadgePercent,
-    title: `${DISCOUNT_PERCENT}% below MRP`,
-    text: "Wholesale pricing on every pack, shown upfront next to the printed MRP.",
-  },
-  {
-    icon: PackageCheck,
-    title: "Genuine products",
-    text: "We source from trusted manufacturers and sell only sealed, original packs.",
-  },
-  {
-    icon: Stethoscope,
-    title: "Dosage guidance",
-    text: "Not sure what your pond needs? Message us your problem and we'll suggest products and doses.",
-  },
-  {
-    icon: Truck,
-    title: "Bulk orders & delivery",
-    text: "From a single pack to full shipper loads for farms, dealers and hatcheries.",
-  },
-];
+const REASON_ICONS = [BadgePercent, PackageCheck, Stethoscope, Truck];
 
-function WhyUs() {
+function WhyUs({ t }: SectionProps) {
   return (
     <section className="bg-scales">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-        <SectionHeading eyebrow="Why farmers choose us" title={`Why buy from ${siteConfig.name}`} />
+        <SectionHeading eyebrow={t.home.whyEyebrow} title={t.home.whyTitle(siteConfig.name)} />
         <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {REASONS.map(({ icon: Icon, title, text }) => (
-            <li key={title} className="rounded-drop bg-white p-6 shadow-soft">
-              <span className="grid size-12 place-items-center rounded-full bg-linear-to-br from-aqua to-lagoon text-white">
-                <Icon className="size-6" aria-hidden />
-              </span>
-              <h3 className="mt-4 text-xl font-bold text-ink">{title}</h3>
-              <p className="mt-1.5 text-muted">{text}</p>
-            </li>
-          ))}
+          {t.home.reasons.map((reason, i) => {
+            const Icon = REASON_ICONS[i];
+            return (
+              <li key={reason.text} className="rounded-drop bg-white p-6 shadow-soft">
+                <span className="grid size-12 place-items-center rounded-full bg-linear-to-br from-aqua to-lagoon text-white">
+                  <Icon className="size-6" aria-hidden />
+                </span>
+                <h3 className="mt-4 text-xl font-bold text-ink">{reason.title(DISCOUNT_PERCENT)}</h3>
+                <p className="mt-1.5 text-muted">{reason.text}</p>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>
   );
 }
 
-const STEPS = [
-  { title: "Find your product", text: "Search by name or by the problem in your pond." },
-  { title: "Tap “Buy on WhatsApp”", text: "Your message is ready with the product, pack and quantity." },
-  { title: "Confirm & receive", text: "We confirm price and delivery on chat. No forms, no sign-up." },
-];
-
-function HowToOrder() {
+function HowToOrder({ lang, t }: SectionProps) {
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
       <div className="relative overflow-hidden rounded-[2rem] bg-underwater px-6 py-12 text-white sm:px-12">
@@ -347,21 +340,21 @@ function HowToOrder() {
         <div className="relative grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:items-center">
           <div>
             <p className="font-display text-sm font-semibold tracking-widest text-aqua-light uppercase">
-              How to order
+              {t.home.howEyebrow}
             </p>
-            <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Order in three simple steps</h2>
-            <p className="mt-3 text-lg text-foam/80">Ordering takes less than a minute on WhatsApp.</p>
+            <h2 className="mt-2 text-3xl font-bold sm:text-4xl">{t.home.howTitle}</h2>
+            <p className="mt-3 text-lg text-foam/80">{t.home.howText}</p>
             <a
-              href={whatsappLink(GENERAL_ENQUIRY_MESSAGE)}
+              href={whatsappLink(generalMessage(lang))}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-whatsapp px-6 py-3 font-semibold text-abyss transition-transform hover:scale-[1.03]"
             >
-              <MessageCircle className="size-5" /> Start a chat
+              <MessageCircle className="size-5" /> {t.home.startChat}
             </a>
           </div>
           <ol className="grid gap-3">
-            {STEPS.map((step, i) => (
+            {t.home.steps.map((step, i) => (
               <li
                 key={step.title}
                 className="flex gap-4 rounded-2xl bg-white/8 p-4 ring-1 ring-white/10 backdrop-blur"

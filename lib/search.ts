@@ -1,5 +1,6 @@
 import Fuse from "fuse.js";
 import { products, type Product } from "@/data/products";
+import { taglinesHi } from "@/data/products-hi";
 import {
   applications,
   categories,
@@ -53,10 +54,12 @@ const documents = products.map((p) => ({
   product: p,
   name: p.name,
   nameHi: p.nameHi,
-  tagline: p.tagline,
+  tagline: `${p.tagline} ${taglinesHi[p.slug] ?? ""}`,
   keywords: p.keywords.join(" "),
-  problems: p.problems.map((s) => `${problems[s].label} ${problems[s].hint}`).join(" "),
-  category: categories[p.category].label,
+  problems: p.problems
+    .map((s) => `${problems[s].label} ${problems[s].hint} ${problems[s].hi.label} ${problems[s].hi.hint}`)
+    .join(" "),
+  category: `${categories[p.category].label} ${categories[p.category].hi.label}`,
   description: p.description,
   composition: p.composition,
 }));

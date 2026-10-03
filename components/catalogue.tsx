@@ -4,23 +4,28 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
 import {
+  applicationLabel,
   applications,
   categories,
+  categoryText,
   problems,
+  problemText,
   species,
+  speciesLabel,
   type ApplicationSlug,
   type CategorySlug,
   type ProblemSlug,
   type SpeciesSlug,
 } from "@/data/taxonomy";
-import { plural } from "@/lib/format";
 import { filtersToQuery, parseFilters, searchProducts, type Filters } from "@/lib/search";
 import { whatsappLink } from "@/lib/whatsapp";
+import { useI18n } from "./i18n-provider";
 import { WhatsAppIcon } from "./icons";
 import { ProblemIcon } from "./problem-icon";
 import { ProductCard } from "./product-card";
 
 export function Catalogue() {
+  const { lang, t } = useI18n();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -57,6 +62,7 @@ export function Catalogue() {
   const activeCount = [filters.q, filters.problem, filters.category, filters.species, filters.use].filter(
     Boolean,
   ).length;
+  const c = t.catalogue;
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
@@ -65,21 +71,21 @@ export function Catalogue() {
         <div className="flex items-center gap-2 rounded-full bg-cream px-4 ring-1 ring-deep/10 focus-within:ring-2 focus-within:ring-aqua">
           <Search className="size-5 shrink-0 text-muted" aria-hidden />
           <label htmlFor="catalogue-search" className="sr-only">
-            Search products
+            {c.searchLabel}
           </label>
           <input
             id="catalogue-search"
             type="search"
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
-            placeholder="Search by name, problem or ingredient — Hindi works too"
+            placeholder={c.searchPlaceholder}
             className="min-w-0 flex-1 bg-transparent py-3 text-base text-ink placeholder:text-muted/80 focus:outline-none"
           />
           {query && (
             <button
               type="button"
               onClick={() => onQueryChange("")}
-              aria-label="Clear search"
+              aria-label={c.clearSearch}
               className="grid size-8 place-items-center rounded-full text-muted hover:bg-deep/5"
             >
               <X className="size-4" />
@@ -88,7 +94,7 @@ export function Catalogue() {
         </div>
 
         <fieldset className="mt-5">
-          <legend className="font-display text-sm font-semibold text-ink">Pond problem</legend>
+          <legend className="font-display text-sm font-semibold text-ink">{c.problem}</legend>
           <div className="-mx-4 mt-2 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
             {(Object.keys(problems) as ProblemSlug[]).map((slug) => {
               const active = filters.problem === slug;
@@ -105,7 +111,7 @@ export function Catalogue() {
                   }`}
                 >
                   <ProblemIcon problem={slug} className="size-4" />
-                  {problems[slug].label}
+                  {problemText(slug, lang).label}
                 </button>
               );
             })}
@@ -114,29 +120,32 @@ export function Catalogue() {
 
         <div className="mt-5 grid gap-4 md:grid-cols-[auto_1fr_1fr]">
           <Segmented
-            label="For"
+            label={c.for}
+            allLabel={c.all}
             value={filters.species}
-            options={Object.entries(species).map(([value, o]) => ({
-              value: value as SpeciesSlug,
-              label: o.label,
+            options={(Object.keys(species) as SpeciesSlug[]).map((value) => ({
+              value,
+              label: speciesLabel(value, lang),
             }))}
             onChange={(v) => update({ species: v })}
           />
           <Select
-            label="Category"
+            label={c.category}
+            allLabel={c.all}
             value={filters.category}
-            options={Object.entries(categories).map(([value, o]) => ({
-              value: value as CategorySlug,
-              label: o.label,
+            options={(Object.keys(categories) as CategorySlug[]).map((value) => ({
+              value,
+              label: categoryText(value, lang).label,
             }))}
             onChange={(v) => update({ category: v })}
           />
           <Select
-            label="How it's used"
+            label={c.use}
+            allLabel={c.all}
             value={filters.use}
-            options={Object.entries(applications).map(([value, o]) => ({
-              value: value as ApplicationSlug,
-              label: o.label,
+            options={(Object.keys(applications) as ApplicationSlug[]).map((value) => ({
+              value,
+              label: applicationLabel(value, lang),
             }))}
             onChange={(v) => update({ use: v })}
           />
@@ -147,9 +156,8 @@ export function Catalogue() {
         <div className="mt-6 flex items-start gap-3 rounded-2xl bg-foam p-4 text-deep">
           <ProblemIcon problem={filters.problem} className="mt-0.5 size-5 shrink-0" />
           <p>
-            <strong className="font-semibold">{problems[filters.problem].label}:</strong>{" "}
-            {problems[filters.problem].hint}. These products are commonly used for it — message us if
-            you&apos;d like help choosing a dose.
+            <strong className="font-semibold">{problemText(filters.problem, lang).label}:</strong>{" "}
+            {problemText(filters.problem, lang).hint}. {c.problemNote}
           </p>
         </div>
       )}
@@ -157,7 +165,7 @@ export function Catalogue() {
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <p className="text-muted" aria-live="polite">
           <SlidersHorizontal className="mr-1.5 inline size-4 align-[-2px]" aria-hidden />
-          Showing <strong className="text-ink">{plural(results.length, "product")}</strong>
+          {c.showing} <strong className="text-ink">{t.common.products(results.length)}</strong>
         </p>
         {activeCount > 0 && (
           <button
@@ -165,7 +173,7 @@ export function Catalogue() {
             onClick={clearAll}
             className="text-sm font-semibold text-lagoon hover:text-deep"
           >
-            Clear all filters
+            {c.clearAll}
           </button>
         )}
       </div>
@@ -185,17 +193,15 @@ export function Catalogue() {
 
 type Option<T extends string> = { value: T; label: string };
 
-function Select<T extends string>({
-  label,
-  value,
-  options,
-  onChange,
-}: {
+type ControlProps<T extends string> = {
   label: string;
+  allLabel: string;
   value?: T;
   options: Option<T>[];
   onChange: (value: T | undefined) => void;
-}) {
+};
+
+function Select<T extends string>({ label, allLabel, value, options, onChange }: ControlProps<T>) {
   return (
     <label className="block">
       <span className="font-display text-sm font-semibold text-ink">{label}</span>
@@ -205,7 +211,7 @@ function Select<T extends string>({
           onChange={(e) => onChange((e.target.value || undefined) as T | undefined)}
           className="w-full appearance-none rounded-xl border border-deep/12 bg-white px-3 py-2.5 pr-9 text-ink focus:border-aqua focus:outline-none"
         >
-          <option value="">All</option>
+          <option value="">{allLabel}</option>
           {options.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
@@ -221,18 +227,8 @@ function Select<T extends string>({
   );
 }
 
-function Segmented<T extends string>({
-  label,
-  value,
-  options,
-  onChange,
-}: {
-  label: string;
-  value?: T;
-  options: Option<T>[];
-  onChange: (value: T | undefined) => void;
-}) {
-  const all: Option<T | "">[] = [{ value: "", label: "All" }, ...options];
+function Segmented<T extends string>({ label, allLabel, value, options, onChange }: ControlProps<T>) {
+  const all: Option<T | "">[] = [{ value: "", label: allLabel }, ...options];
   return (
     <fieldset>
       <legend className="font-display text-sm font-semibold text-ink">{label}</legend>
@@ -259,23 +255,19 @@ function Segmented<T extends string>({
 }
 
 function EmptyState({ query, onClear }: { query: string; onClear: () => void }) {
-  const message = query
-    ? `Hello, I'm looking for "${query}" for my pond. Do you have it?`
-    : "Hello, I need help choosing products for my pond.";
+  const { t } = useI18n();
+  const message = query ? t.wa.lookingFor(query) : t.wa.needHelp;
   return (
     <div className="mt-6 rounded-[1.75rem] border border-dashed border-deep/20 bg-white px-6 py-12 text-center">
-      <p className="font-display text-2xl font-bold text-ink">No products match</p>
-      <p className="mx-auto mt-2 max-w-md text-muted">
-        Try a different word or clear the filters. Can&apos;t find it? Ask us on WhatsApp — we may still be
-        able to get it for you.
-      </p>
+      <p className="font-display text-2xl font-bold text-ink">{t.catalogue.emptyTitle}</p>
+      <p className="mx-auto mt-2 max-w-md text-muted">{t.catalogue.emptyText}</p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <button
           type="button"
           onClick={onClear}
           className="rounded-full border border-deep/15 px-5 py-2.5 font-semibold text-ink hover:bg-foam"
         >
-          Clear filters
+          {t.catalogue.clearFilters}
         </button>
         <a
           href={whatsappLink(message, "query")}
@@ -283,7 +275,7 @@ function EmptyState({ query, onClear }: { query: string; onClear: () => void }) 
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-full bg-whatsapp px-5 py-2.5 font-semibold text-abyss"
         >
-          <WhatsAppIcon className="size-5" /> Ask on WhatsApp
+          <WhatsAppIcon className="size-5" /> {t.catalogue.askOnWhatsApp}
         </a>
       </div>
     </div>

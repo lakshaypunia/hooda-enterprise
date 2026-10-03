@@ -1,9 +1,13 @@
+"use client";
+
 import Image from "next/image";
-import { productImage } from "@/lib/product-image";
 import type { Product } from "@/data/products";
+import { productNames } from "@/data/products-hi";
+import { productImage } from "@/lib/product-image";
+import { useI18n } from "./i18n-provider";
 
 type Props = {
-  product: Pick<Product, "slug" | "name" | "nameHi">;
+  product: Product;
   sizes: string;
   priority?: boolean;
   className?: string;
@@ -11,14 +15,16 @@ type Props = {
 
 /** Pack photo on white, or a themed placeholder when no photo is available yet. */
 export function ProductImage({ product, sizes, priority, className = "" }: Props) {
+  const { lang } = useI18n();
   const src = productImage(product.slug);
+  const names = productNames(product, lang);
 
   if (src) {
     return (
       <div className={`relative aspect-square overflow-hidden bg-white ${className}`}>
         <Image
           src={src}
-          alt={`${product.name} pack`}
+          alt={names.primary}
           fill
           sizes={sizes}
           priority={priority}
@@ -44,8 +50,8 @@ export function ProductImage({ product, sizes, priority, className = "" }: Props
         />
       </svg>
       <div className="relative px-4">
-        <p className="font-display text-xl leading-tight font-bold sm:text-2xl">{product.name}</p>
-        <p className="mt-1 text-sm text-aqua-light">{product.nameHi}</p>
+        <p className="font-display text-xl leading-tight font-bold sm:text-2xl">{names.primary}</p>
+        <p className="mt-1 text-sm text-aqua-light">{names.secondary}</p>
       </div>
     </div>
   );
