@@ -12,22 +12,22 @@ export function ProductCard({ product }: { product: Product }) {
     <article className="group relative flex flex-col overflow-hidden rounded-drop border border-deep/8 bg-white shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-glow">
       <ProductImage
         product={product}
-        sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 90vw"
+        sizes="(min-width: 1024px) 280px, 50vw"
         className="border-b border-deep/6"
       />
-      <div className="flex flex-1 flex-col p-4">
-        <p className="text-xs font-semibold tracking-wide text-lagoon uppercase">
+      <div className="flex flex-1 flex-col p-3 sm:p-4">
+        <p className="text-[11px] font-semibold tracking-wide text-lagoon uppercase sm:text-xs">
           {categories[product.category].short}
         </p>
-        <h3 className="mt-1 text-xl leading-tight font-bold text-ink">
+        <h3 className="mt-1 text-lg leading-tight font-bold text-ink sm:text-xl">
           <Link href={`/products/${product.slug}`} className="after:absolute after:inset-0">
             {product.name}
           </Link>
-          <span className="ml-2 align-middle text-sm font-medium text-muted">{product.nameHi}</span>
+          <span className="block text-sm font-medium text-muted sm:ml-2 sm:inline sm:align-middle">{product.nameHi}</span>
         </h3>
-        <p className="mt-1.5 line-clamp-2 text-[15px] text-muted">{product.tagline}</p>
+        <p className="mt-1.5 line-clamp-2 text-sm text-muted sm:text-[15px]">{product.tagline}</p>
 
-        <div className="mt-3 flex flex-wrap gap-1.5">
+        <div className="mt-3 hidden flex-wrap gap-1.5 sm:flex">
           {product.species.map((s) => (
             <span key={s} className="rounded-full bg-foam px-2.5 py-0.5 text-xs font-medium text-deep">
               {speciesLabels[s].label}
@@ -38,7 +38,7 @@ export function ProductCard({ product }: { product: Product }) {
           </span>
         </div>
 
-        <div className="mt-auto pt-4">
+        <div className="mt-auto pt-3 sm:pt-4">
           <PriceTag mrp={mrp} prefix={mrp && multiplePacks ? "From" : undefined} />
         </div>
       </div>
