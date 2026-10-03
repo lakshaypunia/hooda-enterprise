@@ -6,8 +6,8 @@ import { Atom, Check, ChevronRight, FlaskConical, Info, ListChecks } from "lucid
 import { getProduct, products, type Product } from "@/data/products";
 import { applications, categories, problems, species } from "@/data/taxonomy";
 import { DOSAGE_DISCLAIMER } from "@/lib/site-config";
+import { BuyPanel } from "@/components/buy-panel";
 import { Wave } from "@/components/icons";
-import { PackPrices } from "@/components/pack-prices";
 import { ProblemIcon } from "@/components/problem-icon";
 import { ProductCard } from "@/components/product-card";
 import { ProductImage } from "@/components/product-image";
@@ -112,7 +112,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
 
         <aside className="order-first lg:order-none lg:col-start-2 lg:row-start-1">
           <div className="lg:sticky lg:top-24">
-            <PackPrices product={product} />
+            <BuyPanel product={product} />
           </div>
         </aside>
       </div>

@@ -3,6 +3,7 @@ import { lowestMrp, type Product } from "@/data/products";
 import { categories, species as speciesLabels } from "@/data/taxonomy";
 import { PriceTag } from "./price-tag";
 import { ProductImage } from "./product-image";
+import { QuickAdd } from "./quick-add";
 
 export function ProductCard({ product }: { product: Product }) {
   const mrp = lowestMrp(product);
@@ -40,8 +41,9 @@ export function ProductCard({ product }: { product: Product }) {
           </span>
         </div>
 
-        <div className="mt-auto pt-3 sm:pt-4">
+        <div className="mt-auto flex items-end justify-between gap-2 pt-3 sm:pt-4">
           <PriceTag mrp={mrp} prefix={mrp && multiplePacks ? "From" : undefined} />
+          <QuickAdd slug={product.slug} size={product.packs[0].size} name={product.name} />
         </div>
       </div>
     </article>

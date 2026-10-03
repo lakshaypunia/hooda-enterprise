@@ -1,8 +1,15 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { GENERAL_ENQUIRY_MESSAGE, whatsappLink } from "@/lib/whatsapp";
 import { WhatsAppIcon } from "./icons";
 
 /** Floating WhatsApp button shown on every page. */
 export function WhatsAppFab() {
+  // Product pages have their own large WhatsApp buttons; the FAB would cover them on phones.
+  const pathname = usePathname();
+  if (/^\/products\/[^/]+/.test(pathname)) return null;
+
   return (
     <a
       href={whatsappLink(GENERAL_ENQUIRY_MESSAGE)}

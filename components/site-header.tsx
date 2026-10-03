@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { siteConfig } from "@/lib/site-config";
 import { GENERAL_ENQUIRY_MESSAGE, whatsappLink } from "@/lib/whatsapp";
+import { BasketButton } from "./basket";
 import { LogoMark, WhatsAppIcon } from "./icons";
 
 export function SiteHeader() {
@@ -71,6 +72,7 @@ export function SiteHeader() {
             <WhatsAppIcon className="size-4" />
             Order on WhatsApp
           </a>
+          <BasketButton />
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
