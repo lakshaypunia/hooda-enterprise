@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Baloo_2, Mukta } from "next/font/google";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { WhatsAppFab } from "@/components/whatsapp-fab";
 import "./globals.css";
 
 const baloo = Baloo_2({
@@ -30,7 +33,20 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${baloo.variable} ${mukta.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-ink"
+        >
+          Skip to content
+        </a>
+        <SiteHeader />
+        <div id="main" className="flex flex-1 flex-col">
+          {children}
+        </div>
+        <SiteFooter />
+        <WhatsAppFab />
+      </body>
     </html>
   );
 }

@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <main className="relative flex flex-1 items-center overflow-hidden bg-underwater text-white">
+    <main className="relative flex min-h-[70vh] flex-1 items-center overflow-hidden bg-underwater text-white">
       <div aria-hidden className="absolute inset-0 caustics" />
       <div className="relative mx-auto w-full max-w-6xl px-4 py-32 sm:px-6">
         <p className="font-display text-aqua-light">Hooda Enterprise</p>
