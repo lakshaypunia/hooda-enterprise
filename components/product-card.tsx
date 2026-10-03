@@ -23,7 +23,9 @@ export function ProductCard({ product }: { product: Product }) {
           <Link href={`/products/${product.slug}`} className="after:absolute after:inset-0">
             {product.name}
           </Link>
-          <span className="block text-sm font-medium text-muted sm:ml-2 sm:inline sm:align-middle">{product.nameHi}</span>
+          <span className="block text-sm font-medium text-muted sm:ml-2 sm:inline sm:align-middle">
+            {product.nameHi}
+          </span>
         </h3>
         <p className="mt-1.5 line-clamp-2 text-sm text-muted sm:text-[15px]">{product.tagline}</p>
 

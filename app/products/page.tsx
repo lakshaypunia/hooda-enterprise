@@ -24,7 +24,8 @@ export default function ProductsPage() {
           </p>
           <h1 className="mt-2 text-4xl font-extrabold sm:text-5xl">Find the right product for your pond</h1>
           <p className="mt-3 max-w-2xl text-lg text-foam/85">
-            {products.length} products for fish and shrimp farming. Every price is {DISCOUNT_PERCENT}% below MRP.
+            {products.length} products for fish and shrimp farming. Every price is {DISCOUNT_PERCENT}% below
+            MRP.
           </p>
         </div>
         <Wave className="absolute bottom-0 left-0 h-12 w-full text-cream sm:h-16" />

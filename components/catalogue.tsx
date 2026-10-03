@@ -116,7 +116,10 @@ export function Catalogue() {
           <Segmented
             label="For"
             value={filters.species}
-            options={Object.entries(species).map(([value, o]) => ({ value: value as SpeciesSlug, label: o.label }))}
+            options={Object.entries(species).map(([value, o]) => ({
+              value: value as SpeciesSlug,
+              label: o.label,
+            }))}
             onChange={(v) => update({ species: v })}
           />
           <Select
@@ -145,8 +148,8 @@ export function Catalogue() {
           <ProblemIcon problem={filters.problem} className="mt-0.5 size-5 shrink-0" />
           <p>
             <strong className="font-semibold">{problems[filters.problem].label}:</strong>{" "}
-            {problems[filters.problem].hint}. These products are commonly used for it — message us if you&apos;d like
-            help choosing a dose.
+            {problems[filters.problem].hint}. These products are commonly used for it — message us if
+            you&apos;d like help choosing a dose.
           </p>
         </div>
       )}
@@ -157,7 +160,11 @@ export function Catalogue() {
           Showing <strong className="text-ink">{plural(results.length, "product")}</strong>
         </p>
         {activeCount > 0 && (
-          <button type="button" onClick={clearAll} className="text-sm font-semibold text-lagoon hover:text-deep">
+          <button
+            type="button"
+            onClick={clearAll}
+            className="text-sm font-semibold text-lagoon hover:text-deep"
+          >
             Clear all filters
           </button>
         )}
@@ -259,8 +266,8 @@ function EmptyState({ query, onClear }: { query: string; onClear: () => void }) 
     <div className="mt-6 rounded-[1.75rem] border border-dashed border-deep/20 bg-white px-6 py-12 text-center">
       <p className="font-display text-2xl font-bold text-ink">No products match</p>
       <p className="mx-auto mt-2 max-w-md text-muted">
-        Try a different word or clear the filters. Can&apos;t find it? Ask us on WhatsApp — we may still be able to
-        get it for you.
+        Try a different word or clear the filters. Can&apos;t find it? Ask us on WhatsApp — we may still be
+        able to get it for you.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <button
