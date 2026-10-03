@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "images:extract": "python scripts/extract-catalogue-images.py \"../Product Catalogue Hindi.pdf\"",
+    "images:report": "node --experimental-strip-types --no-warnings scripts/image-sources-report.ts"
   },
   "dependencies": {
     "lucide-react": "^1.50.0",

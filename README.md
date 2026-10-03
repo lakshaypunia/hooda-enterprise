@@ -45,3 +45,16 @@ docs/PLAN.md    build plan and commit roadmap
 
 All products live in `data/products.ts`. Each pack has its own MRP; the selling price
 is calculated from the MRP using the discount in `lib/site-config.ts`.
+
+## Product images
+
+Pack photos are extracted from the Hindi product catalogue PDF (kept outside the repo):
+
+```bash
+pip install pymupdf pillow
+npm run images:extract   # writes public/products/*.webp and data/image-sources.json
+npm run images:report    # regenerates docs/IMAGE_SOURCES.md
+```
+
+`docs/IMAGE_SOURCES.md` lists every product, where its image came from, and which
+products still need a photo.

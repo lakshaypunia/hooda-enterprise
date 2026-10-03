@@ -46,8 +46,6 @@ export type Product = {
   problems: ProblemSlug[];
   /** Extra search terms, including Hindi and common farmer phrasing. */
   keywords: string[];
-  /** Path under /public, added once images are extracted. */
-  image?: string;
 };
 
 const BRAND = "Provet BluNova";
