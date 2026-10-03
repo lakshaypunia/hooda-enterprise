@@ -42,19 +42,29 @@ Home · /products · /products/[slug] · /water-quality · /about · /contact
 
 ## Commit roadmap
 
-1. chore: commit lockfile, add project docs and env example
-2. feat(theme): aquatic design tokens, fonts, global styles
-3. feat(layout): header, footer, floating WhatsApp button
-4. feat(data): product catalogue typed data from booklet + FY2027 price list
-5. chore(assets): extract product pack images from catalogue
-6. feat(home): underwater hero, problem chips, categories
-7. feat(products): catalogue page with fuzzy search and filters
-8. feat(products): product detail pages (SSG)
-9. feat(whatsapp): prefilled buy/query links + enquiry basket
-10. feat(content): water-quality guide, about, contact
-11. feat(i18n): Hindi language toggle
-12. feat(seo): metadata, sitemap, OG images, product JSON-LD
-13. chore: lint, a11y and performance pass
+- [x] 1. chore: commit lockfile, add project docs and env example
+- [x] 2. feat(theme): aquatic design tokens, fonts, global styles
+- [x] 3. feat(layout): header, footer, floating WhatsApp button
+- [x] 4. feat(data): product catalogue typed data from booklet + FY2027 price list
+- [x] 5. chore(assets): extract product pack images from catalogue
+- [x] 6. feat(home): underwater hero, problem chips, categories
+- [x] 7. feat(products): catalogue page with fuzzy search and filters
+- [x] 8. feat(products): product detail pages (SSG)
+- [x] 9. feat(whatsapp): prefilled buy/query links + enquiry basket
+- [x] 10. feat(content): water-quality guide, about, contact
+- [ ] 11. feat(i18n): Hindi language toggle
+- [ ] 12. feat(seo): metadata, sitemap, OG images, product JSON-LD
+- [ ] 13. chore: lint, a11y and performance pass
+
+## Before launch (needs the owner)
+
+- [ ] Real WhatsApp number(s) in `.env.local` / hosting env vars
+- [ ] Business address, phone, hours, GSTIN in `lib/site-config.ts`
+- [ ] Own story and photos for /about
+- [ ] Pack photos for the 13 products without one (see docs/IMAGE_SOURCES.md)
+- [ ] Confirm authorised-dealer status / permission to use Provet branding
+- [ ] Decide on the 20 price-list items left out (poultry/livestock range)
+- [ ] Set `NEXT_PUBLIC_SITE_URL` to the live domain
 
 ## Later
 
